@@ -1,0 +1,71 @@
+/* styles.css */
+
+body {
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+  }
+  
+  section {
+    background-color: #f8f9fa;
+  }
+  
+  #lgx-schedule {
+    padding: 60px 0;
+  }
+  
+  .lgx-inner {
+    background-size: cover;
+    background-position: center center;
+    color: #fff;
+  }
+  
+  .login-wrapper {
+    padding: 40px 0;
+  }
+  
+  .lgx-registration-form-box {
+    background-color: rgba(0, 0, 0, 0.8);
+    border-radius: 8px;
+    padding: 20px;
+  }
+  
+  .title {
+    text-align: center;
+    color: #fff;
+  }
+  
+  .lgx-registration-form {
+    margin-top: 20px;
+  }
+  
+  form {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  input {
+    margin-bottom: 20px;
+    padding: 10px;
+  }
+  
+  button {
+    margin-top: 20px;
+    padding: 10px;
+  }
+  
+  .lgx-links {
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  .btn-link {
+    color: #fff;
+    text-decoration: none;
+  }
+  
+  hr {
+    border-top: 2px solid #eee;
+    margin: 20px 0;
+  }
+  

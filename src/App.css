@@ -1,0 +1,942 @@
+.logo-container {
+  display: flex;
+  align-items: center;
+}
+
+.logo-img {
+  width: 40px; /* Adjust the width as needed */
+  height: auto;
+  margin-right: 10px; /* Adjust the margin as needed */
+}
+.top_bar{
+background: rgba(0,25,47);
+}
+.main{
+width: 100%;
+}
+.search {
+  margin: 60px 50px;
+  border: 4px solid #00192f;
+  border-radius: 12px;
+  box-shadow: 0 8px 6px -6px rgba(50,51,51,.4);
+}
+.search .lgx-btn {
+  margin-top: 8px;
+  padding: 1rem 6.7rem;
+  background-color: #00192f;
+}
+.lgx-btn-black {
+  background-color: #00192f;
+  color: white;
+}
+.input-search{
+border: none;
+    box-shadow: none;
+    outline: 0;
+}
+.home-banner{
+  width: 100%;
+}
+
+.lgx-btn {
+  /* background: #fff; */
+  /* background: #1b89ef; */
+  border: none;
+  border-radius: 8px;
+  box-shadow: 0 8px 6px -6px rgba(50,51,51,.4);
+  cursor: pointer;
+  display: inline-block;
+  font-family: Noto Sans,sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  letter-spacing: .1rem;
+  margin: 0 auto;
+  outline: 0;
+  overflow: hidden;
+  padding: 1.5rem 4rem;
+  position: relative;
+  text-align: center;
+}
+.main-background{
+padding-bottom: 0;
+    padding-top: 0;
+}
+.lgx-slider .slider-text-single figure figcaption .lgx-container {
+  display: block;
+  height: 100%;
+  margin: 0 auto;
+  max-width: 1170px;
+  padding-left: 20px;
+  padding-right: 20px;
+}
+.lgx-banner-info .subtitle {
+  color: #ec398b;
+  font-size: 2rem;
+  font-weight: 600;
+  letter-spacing: 3px;
+  text-shadow: 3px 3px 0 #fff;
+}
+.lgx-banner-info .title {
+  color: #fff;
+  font-family: Noto Sans,sans-serif;
+  font-size: 4rem;
+  font-weight: 700;
+  line-height: 90px;
+  line-height: 9rem;
+  line-height: 7rem;
+  margin: 0 0 2.6rem;
+  text-shadow: 1px 1px 0 #00192f;
+}
+.lgx-banner-info .action-area {
+  display: flex;
+  margin-top: 4.2rem;
+}
+.lgx-btn .lgx-btn-red {
+  background-color: #ec398b;
+}
+.lgx-slider .slider-text-single figure figcaption .lgx-container .lgx-hover-link {
+  display: table;
+  height: 100%;
+  width: 100%;
+}
+.lgx-slider .slider-text-single figure figcaption .lgx-container .lgx-hover-link .lgx-vertical {
+  display: table-cell;
+  vertical-align: middle;
+}
+
+/* TopBar */
+
+.brand-name, .brand-slogan {
+  left: 75px;
+  position: absolute;
+  color: #dadada;
+}
+.brand-slogan {
+  color: #dadada;
+  font-size: 1rem;
+  font-weight: 500;
+  top: 42px;
+}
+/* ImageWithText.css */
+
+.image-container {
+  position: relative;
+  width: 100%;
+  max-height: 400px; /* Set the maximum height of the container */
+  overflow: hidden;
+}
+
+.background-image {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.lgx-banner-info {
+  position: absolute;
+  top: 60%; /* Adjust this value to vertically center the text */
+  left: 30%; /* Adjust this value to horizontally center the text */
+  transform: translate(-50%, -50%);
+  text-align: center;
+  color: #fff; /* Set the text color */
+}
+
+.text-overlay h1 {
+  font-size: 2.5em; /* Set the font size for the heading */
+  margin-bottom: 10px;
+}
+
+.text-overlay p {
+  font-size: 1.2em; /* Set the font size for the paragraph */
+}
+
+/* Breadcrumb Styles */
+.lgx-schedule-dark {
+  background-color: #282c37;
+  color: #ffffff;
+}
+
+.lgx-inner-breadcrumb {
+  padding: 50px 0;
+}
+
+.breadcrumb-area {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.breadcrumb-heading-area h2 {
+  margin: 0;
+}
+
+.breadcrumb ol {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  font-size: 16px;
+}
+
+.breadcrumb li {
+  display: flex;
+  align-items: center;
+  color: #8a8a8a;
+}
+
+.breadcrumb li::before {
+  content: '\00bb';
+  margin: 0 10px;
+}
+
+.breadcrumb a {
+  color: #8a8a8a;
+  text-decoration: none;
+}
+
+.breadcrumb a:hover {
+  color: #ffffff;
+}
+
+/* Login Form Styles */
+.login-wrapper {
+  background-color: #f5f5f5;
+}
+
+.lgx-registration-form-box {
+  background-color: #ffffff;
+  border: 1px solid #eaeaea;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 30px;
+  margin-top: 30px;
+}
+
+.lgx-registration-form {
+  margin-top: 20px;
+}
+
+.lgx-registration-form input,
+.lgx-registration-form button {
+  margin-bottom: 20px;
+}
+
+.lgx-btn-white {
+  background-color: #ffffff;
+  color: #282c37;
+  border: 1px solid #282c37;
+}
+
+.lgx-btn-white:hover {
+  background-color: #282c37;
+  color: #ffffff;
+}
+
+/* Customer */
+/* Add this to your CSS file or style block */
+
+#lgx-travelinfo {
+  background-color: #f8f8f8;
+  padding: 50px 0;
+}
+
+.lgx-inner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.lgx-heading {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.subheading {
+  color: #555;
+}
+
+.heading {
+  color: #333;
+}
+
+.lgx-travelinfo-content {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.lgx-travelinfo-single {
+  text-align: center;
+}
+
+.lgx-travelinfo-single i {
+  margin-bottom: 20px;
+  color: #ff5722; /* Material-UI's primary color */
+}
+
+.title {
+  font-size: 24px;
+  margin-bottom: 10px;
+  color: #333;
+}
+
+.info {
+  color: #555;
+}
+
+/* Blogs */
+
+.lgx-inner {
+  padding: 50px 0;
+}
+
+.lgx-heading {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.lgx-single-news {
+  margin-bottom: 30px;
+  transition: transform 0.3s ease-in-out;
+}
+
+.lgx-single-news:hover {
+  transform: translateY(-5px);
+}
+
+.lgx-single-news figure {
+  overflow: hidden;
+  position: relative;
+  border-radius: 5px;
+}
+
+.lgx-single-news img {
+  width: 100%;
+  height: auto;
+  border-radius: 5px;
+}
+
+.single-news-info {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 0 0 5px 5px;
+}
+
+.single-news-info .title {
+  margin-top: 15px;
+}
+
+.meta-wrapper {
+  font-size: 14px;
+  color: #777;
+}
+
+.hidden {
+  display: none;
+}
+
+.section-btn-area {
+  text-align: center;
+  margin-top: 30px;
+}
+
+.lgx-btn {
+  text-decoration: none;
+  padding: 10px 20px;
+  font-size: 16px;
+  border-radius: 5px;
+  color: #fff;
+  background-color: #ec398b;
+  transition: background-color 0.3s ease-in-out;
+}
+
+.lgx-btn:hover {
+  background-color: #0056b3;
+}
+
+/* Event Crad */
+
+.lgx-inner {
+  padding: 50px 0;
+}
+
+.lgx-heading {
+  text-align: center;
+  margin-bottom: 30px;
+
+  h2 {
+    font-size: 2.5rem;
+    color: #333;
+    margin-bottom: 10px;
+  }
+
+  i {
+    color: #f00;
+  }
+}
+
+.lgx-event {
+  border: 1px solid #ddd;
+  transition: transform 0.3s ease-in-out;
+
+  &:hover {
+    transform: translateY(-10px);
+  }
+
+  a {
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .lgx-event__tag {
+    padding: 8px;
+    background-color: #f00;
+    color: #fff;
+    text-align: center;
+    font-weight: bold;
+  }
+
+  .lgx-event__image {
+    overflow: hidden;
+    img {
+      width: 100%;
+      height: auto;
+    }
+  }
+
+  .lgx-event__info {
+    padding: 20px;
+
+    .meta-wrapper {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 10px;
+      color: #555;
+      font-size: 0.9rem;
+    }
+
+    .title {
+      font-size: 1.2rem;
+      margin-bottom: 5px;
+    }
+
+    .sub-title {
+      font-size: 1rem;
+      height: 20px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .text-primary {
+      color: #f00;
+    }
+  }
+
+  .lgx-event__footer {
+    padding: 10px;
+
+    div {
+      margin-bottom: 5px;
+    }
+  }
+
+  .lgx-event__category {
+    span {
+      display: none;
+    }
+  }
+}
+
+.section-btn-area {
+  text-align: center;
+  margin-top: 30px;
+
+  a {
+    text-decoration: none;
+    color: #fff;
+  }
+
+  .lgx-btn {
+    background-color: #f00;
+    padding: 10px 20px;
+    font-size: 1rem;
+    display: inline-block;
+    border-radius: 5px;
+    transition: background-color 0.3s ease-in-out;
+
+    i {
+      margin-right: 5px;
+    }
+
+    &:hover {
+      background-color: #333;
+    }
+  }
+}
+
+.lgx-heading {
+  display: block;
+  margin-bottom: 4rem;
+  margin-top: 0;
+  overflow: hidden;
+  text-align: center;
+}
+
+.lgx-heading .subheading {
+  color: rgba(50,51,51,.8);
+  font-size: 20px;
+  font-size: 2rem;
+  font-weight: 400;
+  line-height: 30px;
+  line-height: 3rem;
+}
+.lgx-heading .heading, .lgx-heading .subheading {
+  color: #00192f;
+  font-family: Noto Sans,sans-serif;
+  margin: 0;
+}
+.lgx-travelinfo-single {
+  flex: 1;
+  padding: 0 3%;
+  text-align: center;
+}
+
+/* footer */
+.lgx-inner-footer{
+background-color: #00192f;
+}
+.footer-brand-logo {
+  height: 64px;
+}
+.lgx-footer-single {
+  color: hsla(0,0%,100%,.5);
+  display: block;
+  flex: 1;
+  margin-left: 15px;
+  margin-right: 15px;
+  text-align: left;
+}
+.footer-custom-menu {
+  align-items: center;
+  border-top: 1px solid hsla(0,0%,100%,.1);
+  justify-content: center;
+}
+.lgx-footer-area {
+  display: flex;
+  flex-wrap: wrap;
+  overflow: hidden;
+  padding: 3rem;
+}
+.lgx-footer-bottom {
+  background-clip: padding-box;
+  border-top: 1px solid hsla(0,0%,100%,.1);
+  color: hsla(0,0%,100%,.5);
+  font-family: Noto Sans,sans-serif;
+  font-size: 14px;
+  font-size: 1.4rem;
+  font-weight: 400;
+  line-height: 21px;
+  line-height: 2.1rem;
+  padding-bottom: 4.2rem;
+  padding-top: 2.4rem;
+  text-align: center;
+}
+
+/* EventCategories*/
+
+.lgx-schedule {
+  padding: 50px 0;
+}
+
+.lgx-inner {
+  background-size: cover;
+  background-position: center;
+  padding: 40px 0;
+  border-radius: 10px;
+}
+
+.lgx-heading {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.sponsors-area {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+}
+
+.single {
+  width: 30%;
+  margin-bottom: 20px;
+}
+
+.single a {
+  text-decoration: none;
+  color: #333;
+}
+
+.single img {
+  width: 100%;
+  border-radius: 8px;
+}
+
+.single-name {
+  display: block;
+  text-align: center;
+  margin-top: 10px;
+  font-weight: bold;
+}
+
+.sponsors-area-border .single {
+  border: 5px solid #eee;
+}
+.sponsors-area-col3 .single {
+  width: 32%;
+}
+.sponsors-area .single {
+  border-radius: 16px;
+  box-shadow: 0 1px 15px 1px rgba(52,40,104,.05);
+  display: inline-block;
+  margin: 0 .5% 0.6rem;
+  overflow: hidden;
+  padding: 0;
+  position: relative;
+  transition: all .3s ease-in-out 0s;
+  width: 23%;
+}
+.sponsors-area .single-name {
+  color: #fff;
+  cursor: pointer;
+  font-size: 2rem;
+  font-weight: 600;
+  left: 0;
+  letter-spacing: .5px;
+  position: absolute;
+  right: 0;
+  text-shadow: 0 0 5px #00192f;
+  top: 43.5%;
+}
+
+/* EventCategories Ends */
+
+
+.lgx-single-news .single-news-info {
+  margin-top: 1.6rem;
+  padding: 0 1rem;
+  position: relative;
+  z-index: 2;
+}
+
+.lgx-single-news {
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 1px 15px 1px rgba(52,40,104,.1);
+  margin-bottom: 2.6rem;
+  overflow: hidden;
+  padding: 1.6rem 1.6rem 2.6rem;
+  position: relative;
+}
+
+/* Filter CSS */
+/* Add this CSS to your styles.css or equivalent */
+
+.col-12 {
+  width: 100%;
+}
+
+.mb-50 {
+  margin-bottom: 50px;
+}
+
+.pl-30 {
+  padding-left: 30px;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-control {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.lgx-btn {
+  /* background-color: #007bff; */
+  color: #fff;
+  padding: 10px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+/* Adjustments for Material-UI components */
+.MuiFormControl-root {
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+.MuiInputBase-input {
+  padding: 10px;
+}
+
+.MuiSelect-root {
+  width: 100%;
+}
+
+.MuiButton-root {
+  background-color: #007bff;
+  color: #fff;
+  padding: 10px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+/* Seating Chart */
+
+#buy-tickets {
+  background-image: url('https://events.dhigna.com/frontend-assets?path=img%2Fbg-pattern.png');
+  padding: 50px 0;
+}
+
+.heading {
+  font-size: 2.5rem;
+  margin-bottom: 20px;
+}
+
+.subheading {
+  font-size: 1.5rem;
+  margin-bottom: 15px;
+}
+
+.text-white {
+  color: #fff;
+}
+
+.text-center {
+  text-align: center;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  /* border: 1px solid #ddd; Add a border around images */
+  border-radius: 4px; /* Optional: Rounded corners for images */
+  padding: 5px; /* Optional: Add some padding around images */
+}
+
+/* Add more styles as needed for the schedule details */
+.title {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.time {
+  font-size: 1.2rem;
+  color: #555;
+  margin-bottom: 20px;
+}
+
+.lgx-about{
+margin-top: 80px;
+}
+.lgx-about-service {
+  display: flex;
+  /* margin-left: -1rem; */
+  margin-right: -1rem;
+  margin-top: 4.2rem;
+}
+.lgx-about-service .lgx-single-service-color {
+  background: #1b89ef;
+  background-image: linear-gradient(to right top,#1b89ef,#3395f1,#4ba2f2,#ee5099,#ec398b);
+  border-radius: 18px;
+  box-shadow: 0 15px 35px rgba(27,137,239,.3), 0 5px 15px rgba(227,65,154,.2);
+  flex: 1;
+  margin-left: 1rem;
+  margin-right: 1rem;
+  padding: 2rem 3rem;
+}
+.lgx-about-service .lgx-single-service-color .icon {
+  color: #e2e2e2;
+  font-size: 3.8rem;
+}
+/* .lgx-schedule {
+  background-color: #1b89ef;
+} */
+
+.lgx-banner-info-area {
+    display: flex;
+    justify-content: center;
+}
+
+.lgx-banner-info-circle {
+  background: 0 0;
+  border-radius: 50%;
+  margin-right: 5rem;
+  padding: 1.5rem;
+}
+.lgx-banner-info-circle .info-circle-inner {
+  background-color: #00192f;
+  background-position: bottom;
+  background-repeat: no-repeat;
+  background-size: 100% auto,cover;
+  border-radius: 50%;
+  box-shadow: 0 9px 18px -4px rgba(0,25,47,.4);
+  height: 350px;
+  text-align: center;
+  width: 350px;
+}
+.lgx-banner-info-circle .info-circle-inner .date {
+  color: hsla(0,0%,100%,.9);
+  /* line-height: 100px;
+  line-height: 24.9rem;
+  line-height: 15rem; */
+  margin-top: 0;
+  padding-top: 5rem;
+}
+.lgx-banner-info-circle .info-circle-inner .date span {
+  color: hsla(0,0%,100%,.8);
+  display: block;
+  font-family: Noto Sans,sans-serif;
+  font-weight: 700;
+  opacity: .8;
+}
+#lgx-countdown {
+  margin-top: -15px;
+}
+.heading {
+  display: block;
+  margin-bottom: 4rem;
+  margin-top: 0;
+  overflow: hidden;
+  text-align: center;
+}
+
+.single-event-schedule .lgx-tab-content {
+  border-radius: 16px!important;
+}
+
+.lgx-tab .lgx-tab-content {
+  width: 75%;
+}
+.lgx-tab .lgx-nav, .lgx-tab .lgx-tab-content {
+  float: left;
+}
+.lgx-tab-content {
+  background: #fff;
+  border: 4px solid #00192f;
+  border-radius: 0 16px 16px 16px;
+  box-shadow: 0 13px 35px rgba(0,25,47,.2);
+  overflow: hidden;
+  padding: 1rem;
+}
+.tab-content>.active {
+  display: block;
+}
+
+/* .tab-content>.tab-pane {
+  display: none;
+} */
+.panel-group {
+  margin-bottom: 0;
+}
+.panel-group .panel {
+  border-radius: 4px;
+  margin-bottom: 0;
+}
+
+.lgx-panel {
+  border: none;
+  box-shadow: none;
+}
+.panel-default {
+  border-color: #ddd;
+}
+.panel {
+  background-color: #fff;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  box-shadow: 0 1px 1px rgba(0,0,0,.05);
+  margin-bottom: 20px;
+}
+.lgx-panel .panel-heading {
+  background: 0 0;
+  padding: 1rem 2rem;
+}
+.panel-default>.panel-heading {
+  background-color: #f5f5f5;
+  border-color: #ddd;
+  color: #333;
+}
+
+.panel-group .panel-heading {
+  border-bottom: 0;
+}
+.panel-heading {
+  border-bottom: 1px solid transparent;
+  border-top-left-radius: 3px;
+  border-top-right-radius: 3px;
+  padding: 10px 15px;
+}
+.panel-title {
+  font-size: 16px;
+  margin-bottom: 0;
+  margin-top: 0;
+}
+
+.panel-heading>.dropdown .dropdown-toggle, .panel-title {
+  color: inherit;
+}
+.lgx-schedule a {
+  cursor: pointer;
+}
+.lgx-panel .lgx-single-schedule {
+  display: flex;
+  padding: 1rem;
+}
+.lgx-panel .lgx-single-schedule .schedule-info {
+  background: #1b89ef;
+  border: none;
+  border-radius: 14px;
+  box-shadow: 0 4px 6px rgba(50,50,93,.11), 0 1px 3px rgba(0,0,0,.08);
+  padding: .6rem 2rem;
+  transition: all .1s ease-out;
+  width: 100%;
+}
+.lgx-panel .lgx-single-schedule .schedule-info .title {
+  color: #fff;
+  display: inline-block;
+  font-family: Noto Sans,sans-serif;
+  font-size: 1.4rem;
+  font-weight: 600;
+  line-height: 3.4rem;
+  margin: 0 1.5rem 0 0;
+}
+
+
+/* Tickets */
+
+.container {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+}
+
+.ticket-type {
+  width: 200px; /* Adjust the width as needed */
+  margin-bottom: 20px;
+}
+
+.quantity,
+.total {
+  margin-top: 10px;
+}
+
+a{
+  text-decoration: none;
+}

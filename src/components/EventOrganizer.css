@@ -1,0 +1,46 @@
+* EventOrganizersSection.css */
+
+.lgx-schedule {
+  padding: 60px 0;
+}
+
+.lgx-inner {
+  padding: 60px 0;
+  background-size: cover;
+  background-position: center;
+}
+
+.lgx-heading {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.lgx-travelinfo-content {
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
+}
+
+.lgx-travelinfo-single {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.lgx-travelinfo-single i {
+  color: #fff;
+}
+
+.lgx-travelinfo-single .title {
+  font-size: 24px;
+  margin: 20px 0;
+  color: #141212;
+}
+
+.lgx-travelinfo-single .info {
+  /* color: #fff; */
+}
+
+.lgx-schedule-dark {
+  background-color: #222;
+  color: #fff;
+}
