@@ -13,14 +13,14 @@ const TopBar = () => {
     setAnchorEl(null);
   };
   return (
-    <AppBar className="top-bar" position="fixed" sx={{ backgroundColor: '#00192f' }}>
+    <AppBar className="top-bar" position="fixed" sx={{ backgroundColor: 'white', color:"black" }}>
       <Toolbar>
         <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
         <div className="logo-container">
             <a href="/" class="lgx-scroll">
-            <img className="logo-img" src="./icon.png" alt="Dhigna Events" /> 
+            <img className="logo-img" src="./icon1.png" alt="Dhigna Events" /> 
             <span class="brand-name">Dhigna Events</span> 
-            <span class="brand-slogan">Sell Tickets</span>
+            <span class="brand-slogan">Dhigna Events. Sell Tickets.</span>
             </a>
         </div>
         </Typography>
@@ -37,16 +37,16 @@ const TopBar = () => {
   onClose={handleClose}
 >
   <MenuItem>
-    <Link href="/register">Customer Register</Link>
+    <a href="/register">Customer Register</a>
   </MenuItem>
   <MenuItem>
-    <Link href="/register">Organizer Register</Link>
+    <a href="/register">Organizer Register</a>
   </MenuItem>
   <MenuItem>
-    <Link href="/register">Agent Register</Link>
+    <a href="/register">Agent Register</a>
   </MenuItem>
 </Menu>
-<Button color="inherit" href="/" className='lgx-btn'>
+<Button color="inherit" href="/eventsdetail" className='lgx-btn'>
   <i className="fas fa-calendar-day"></i> Browse Events
 </Button>
       

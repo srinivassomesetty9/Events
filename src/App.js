@@ -17,7 +17,7 @@ function App() {
         <Route path="/eventsdetail" element={<EventsDetail />}  />
         <Route path="/login" element={<Login />}  />
         <Route path="/checkout" element={<Checkout />}  />
-        <Route path="/registration" element={<Registration />}  />
+        <Route path="/register" element={<Registration />}  />
     </Routes>
     </div>
   );

@@ -9,6 +9,7 @@ import UpcomingEvent from "./UpcomingEvent";
 import EventCategories from "./EventCategories";
 import TopSelling from "./TopSelling";
 import ExploreCities from "./ExploreCities";
+import ImageScroll from "./ImageScroll";
 
 const Home = () => {
   const citiesData = [
@@ -34,7 +35,13 @@ const Home = () => {
     },
     // Add more cities as needed
   ];
-
+  const images = [
+    { url: '/Eventc1.png' },
+    { url: '/Eventc2.jpg' },
+    { url: '/Eventc3.jpg' },
+    { url: '/Eventc4.jpg' },
+    // Add more images as needed
+  ];
   return (
     <div>
       <div className="main">
@@ -42,7 +49,8 @@ const Home = () => {
         <>
           <div className="image-container">
             <>
-              <img src="./Home.jpg" className="background-image" />
+            {/* <ImageScroll images={images} /> */}
+              <img src="./music-104.gif" className="background-image" />
               <div class="lgx-container">
                 <div class="lgx-hover-link">
                   <div class="lgx-vertical">
@@ -50,7 +58,7 @@ const Home = () => {
                       <h3 class="subtitle lgx-delay lgx-fadeInDown">
                         Event Management And Selling Platform
                       </h3>{" "}
-                      <h2 style={{marginRight:"550px"}}>Dhigna Events</h2>{" "}
+                      <h2 style={{marginRight:"515px"}}>Dhigna Events</h2>{" "}
                       <div class="action-area">
                         <div class="lgx-video-area">
                           <a href="/events" class="lgx-btn lgx-btn-red">

@@ -62,7 +62,7 @@ console.log("EL")
     value={searchTerm}
     className='input-search'
     onChange={(e) => setSearchTerm(e.target.value)}
-    style={{ width: '60%', padding: '10px', marginBottom: '20px' }}
+    style={{ width: '60%', padding: '10px'}}
   />
   <button type="submit" class="lgx-btn lgx-btn-black"><i class="fas fa-search"></i> Search Event</button>
   </div>
