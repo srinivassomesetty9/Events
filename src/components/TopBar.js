@@ -24,10 +24,10 @@ const TopBar = () => {
             </a>
         </div>
         </Typography>
-   <Button color="inherit" href="/login">
+   <Button color='secondary' variant="contained" className="lgx-btn" style={{marginRight: "10px"}} href="/login">
 <i className="fas fa-fingerprint"></i> Login
 </Button>
-<Button color="inherit" aria-haspopup="true" onClick={handleClick}>
+<Button color='secondary' variant="contained" style={{marginRight: "10px"}} className="lgx-btn" aria-haspopup="true" onClick={handleClick}>
   <i className="fas fa-user-plus"></i> Register
 </Button>
 <Menu
@@ -37,16 +37,16 @@ const TopBar = () => {
   onClose={handleClose}
 >
   <MenuItem>
-    <a href="/register">Customer Register</a>
+    <Button href="/register" >Customer Register</Button>
   </MenuItem>
   <MenuItem>
-    <a href="/register">Organizer Register</a>
+    <Button href="/register">Organizer Register</Button>
   </MenuItem>
   <MenuItem>
-    <a href="/register">Agent Register</a>
+    <Button href="/register">Agent Register</Button>
   </MenuItem>
 </Menu>
-<Button color="inherit" href="/eventsdetail" className='lgx-btn'>
+<Button variant="contained" color='secondary' className="lgx-btn" href="/eventsdetail">
   <i className="fas fa-calendar-day"></i> Browse Events
 </Button>
       
@@ -56,95 +56,3 @@ const TopBar = () => {
 };
 
 export default TopBar;
-
-// import React from 'react';
-// import { AppBar, Toolbar, IconButton, Typography, Button, Link, MenuItem, Menu } from '@mui/material';
-// import MenuIcon from '@mui/icons-material/Menu';
-
-// const Navbar = () => {
-//   const [anchorEl, setAnchorEl] = React.useState(null);
-
-//   const handleClick = (event) => {
-//     setAnchorEl(event.currentTarget);
-//   };
-
-//   const handleClose = () => {
-//     setAnchorEl(null);
-//   };
-
-//   return (
-//     <AppBar position="fixed" sx={{ backgroundColor: '#2196f3' }}>
-//       <Toolbar>
-//         <IconButton
-//           size="large"
-//           edge="start"
-//           color="inherit"
-//           aria-label="menu"
-//           onClick={handleClick}
-//           sx={{ mr: 2 }}
-//         >
-//           <MenuIcon />
-//         </IconButton>
-//         <Menu
-//           id="menu-appbar"
-//           anchorEl={anchorEl}
-//           anchorOrigin={{
-//             vertical: 'top',
-//             horizontal: 'right',
-//           }}
-//           keepMounted
-//           transformOrigin={{
-//             vertical: 'top',
-//             horizontal: 'right',
-//           }}
-//           open={Boolean(anchorEl)}
-//           onClose={handleClose}
-//         >
-//           {/* Your menu items go here */}
-//           <MenuItem onClick={handleClose}>
-//             <Link href="/">Home</Link>
-//           </MenuItem>
-//           <MenuItem onClick={handleClose}>
-//             <Link href="/events">Events</Link>
-//           </MenuItem>
-//           <MenuItem onClick={handleClose}>
-//             <Link href="/registration">Registration</Link>
-//           </MenuItem>
-//           <MenuItem onClick={handleClose}>
-//             <Link href="/cart">Cart</Link>
-//           </MenuItem>
-//         </Menu>
-//         <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-//           Your Event Name
-//         </Typography>
-//         <Button color="inherit" href="/">
-//           <i className="fas fa-fingerprint"></i> Login
-//         </Button>
-//         <Button color="inherit" aria-haspopup="true" onClick={handleClick}>
-//           <i className="fas fa-user-plus"></i> Register
-//         </Button>
-//         <Menu
-//           id="register-menu"
-//           anchorEl={anchorEl}
-//           open={Boolean(anchorEl)}
-//           onClose={handleClose}
-//         >
-//           <MenuItem>
-//             <Link href="/">Customer Register</Link>
-//           </MenuItem>
-//           <MenuItem>
-//             <Link href="/">Organizer Register</Link>
-//           </MenuItem>
-//           <MenuItem>
-//             <Link href="/">Agent Register</Link>
-//           </MenuItem>
-//         </Menu>
-//         <Button color="inherit" href="/">
-//           <i className="fas fa-calendar-day"></i> Browse Events
-//         </Button>
-//       </Toolbar>
-//     </AppBar>
-//   );
-// };
-
-// export default Navbar;
