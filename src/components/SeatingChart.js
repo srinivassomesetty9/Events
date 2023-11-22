@@ -1,10 +1,11 @@
 // Import necessary dependencies
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Container, Grid, Typography, Button } from "@mui/material";
 
 // Define your SeatingChart component
 const SeatingChart = () => {
+  let navigate = useNavigate();
   return (
     <div>
       <section
@@ -62,8 +63,8 @@ const SeatingChart = () => {
                     <div className="panel panel-default lgx-panel">
                       <div role="tab" className="panel-heading">
                         <div className="panel-title">
-                          <a
-                          href="/checkout"
+                          <Button
+                            onClick={() => navigate("/checkout")}
                             role="button"
                             data-toggle="collapse"
                             aria-expanded="true"
@@ -80,7 +81,7 @@ const SeatingChart = () => {
                                 {/* Add any additional elements or content here */}
                               </div>
                             </div>
-                          </a>
+                          </Button>
                         </div>
                       </div>
                     </div>

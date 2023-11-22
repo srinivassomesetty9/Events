@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import React from "react";
 import { Button, Container, Grid, Typography } from "@mui/material";
 import EventCard from "./EventCard";
+import { useNavigate } from "react-router-dom";
 
 const UpcomingEvent = () => {
   // Sample event data (replace with your actual data)
-
+  let navigate = useNavigate();
   const events = [
     {
       link: "/eventdetail",
@@ -69,7 +70,7 @@ const UpcomingEvent = () => {
         </Grid>
         <div className="section-btn-area">
           <Button
-            href="/events"
+            onClick={() => navigate("/events")}
             variant="contained"
             color="secondary"
           >

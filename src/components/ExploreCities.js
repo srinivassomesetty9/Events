@@ -1,15 +1,15 @@
-import React from 'react';
-import Container from '@mui/material/Container';
-import Grid from '@mui/material/Grid';
-import Card from '@mui/material/Card';
-import CardActionArea from '@mui/material/CardActionArea';
-import CardContent from '@mui/material/CardContent';
-import Typography from '@mui/material/Typography';
+import React from "react";
+import Container from "@mui/material/Container";
+import Grid from "@mui/material/Grid";
+import Card from "@mui/material/Card";
+import CardActionArea from "@mui/material/CardActionArea";
+import CardContent from "@mui/material/CardContent";
+import Typography from "@mui/material/Typography";
 
 const CityCard = ({ imageUrl, cityName }) => (
   <Card>
     <CardActionArea>
-      <img src={imageUrl} alt={cityName} style={{ maxWidth: '100%' }} />
+      <img src={imageUrl} alt={cityName} style={{ maxWidth: "100%" }} />
       <CardContent>
         <Typography variant="h5">{cityName}</Typography>
       </CardContent>

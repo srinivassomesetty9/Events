@@ -1,11 +1,17 @@
 import { Grid, List, ListItem, ListItemText, Typography } from "@mui/material";
 import React from "react";
 
-const Cart = ({totalTickets, totalTicketsPrice, processingFees, ticketDeliveryFees, grossTotal}) => {
-    const listItemStyle = {
-        justifyContent: "space-between",
-      };
-      const formattedGrossTotal = parseFloat(grossTotal).toFixed(1);
+const Cart = ({
+  totalTickets,
+  totalTicketsPrice,
+  processingFees,
+  ticketDeliveryFees,
+  grossTotal,
+}) => {
+  const listItemStyle = {
+    justifyContent: "space-between",
+  };
+  const formattedGrossTotal = parseFloat(grossTotal).toFixed(1);
   return (
     <div>
       {/* Cart */}
@@ -29,13 +35,15 @@ const Cart = ({totalTickets, totalTicketsPrice, processingFees, ticketDeliveryFe
           <ListItem style={listItemStyle}>
             <ListItemText primary="Total Tickets Price" />
             <strong className="">
-              {totalTicketsPrice}<small>GBP</small>
+              {totalTicketsPrice}
+              <small>GBP</small>
             </strong>
           </ListItem>
           <ListItem style={listItemStyle}>
             <ListItemText primary="Processing Fees" />
             <strong className="">
-              {processingFees}<small>GBP</small>
+              {processingFees}
+              <small>GBP</small>
             </strong>
           </ListItem>
           <ListItem style={listItemStyle}>
@@ -63,7 +71,7 @@ const Cart = ({totalTickets, totalTicketsPrice, processingFees, ticketDeliveryFe
               >
                 <input type="hidden" name="delivery_charge_id" value="12" />
                 <strong className="">
-                 {ticketDeliveryFees} <small>GBP</small>
+                  {ticketDeliveryFees} <small>GBP</small>
                 </strong>
               </div>
             </div>
@@ -71,7 +79,8 @@ const Cart = ({totalTickets, totalTicketsPrice, processingFees, ticketDeliveryFe
           <ListItem style={listItemStyle}>
             <ListItemText primary="Gross Total" />
             <strong className="">
-              {formattedGrossTotal}<small>GBP</small>
+              {formattedGrossTotal}
+              <small>GBP</small>
             </strong>
           </ListItem>
         </List>

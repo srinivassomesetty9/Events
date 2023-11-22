@@ -1,63 +1,4 @@
-// import React from 'react';
-// import { Typography, Container, Grid, Link } from '@mui/material';
-
-// const Footer = () => {
-//   return (
-//     <Container component="footer" sx={{ backgroundColor: '#00192f', color: '#fff', padding: '40px 0', maxWidth: '0' }}>
-//       <Grid container spacing={3}>
-//         <Grid item xs={12} sm={6} md={4}>
-//           <Typography variant="h6" sx={{ marginBottom: '20px' }}>
-//             Contact Us
-//           </Typography>
-//           <Typography>
-//             Email: info@example.com
-//           </Typography>
-//           <Typography>
-//             Phone: +1 123 456 7890
-//           </Typography>
-//         </Grid>
-//         <Grid item xs={12} sm={6} md={4}>
-//           <Typography variant="h6" sx={{ marginBottom: '20px' }}>
-//             Quick Links
-//           </Typography>
-//           <Link href="#" color="inherit" underline="hover" sx={{ display: 'block', marginBottom: '10px' }}>
-//             Home
-//           </Link>
-//           <Link href="#" color="inherit" underline="hover" sx={{ display: 'block', marginBottom: '10px' }}>
-//             Events
-//           </Link>
-//           <Link href="#" color="inherit" underline="hover" sx={{ display: 'block', marginBottom: '10px' }}>
-//             Registration
-//           </Link>
-//           <Link href="#" color="inherit" underline="hover" sx={{ display: 'block' }}>
-//             Cart
-//           </Link>
-//         </Grid>
-//         <Grid item xs={12} md={4}>
-//           <Typography variant="h6" sx={{ marginBottom: '20px' }}>
-//             Follow Us
-//           </Typography>
-//           <Link href="#" color="inherit" underline="hover" sx={{ display: 'block', marginBottom: '10px' }}>
-//             Facebook
-//           </Link>
-//           <Link href="#" color="inherit" underline="hover" sx={{ display: 'block', marginBottom: '10px' }}>
-//             Twitter
-//           </Link>
-//           <Link href="#" color="inherit" underline="hover" sx={{ display: 'block' }}>
-//             Instagram
-//           </Link>
-//         </Grid>
-//       </Grid>
-//       <Typography variant="body2" sx={{ marginTop: '20px', textAlign: 'center' }}>
-//         © 2023 Your Event Name. All rights reserved.
-//       </Typography>
-//     </Container>
-//   );
-// };
-
-// export default Footer;
-
-import React from 'react';
+import React from "react";
 import {
   Container,
   Grid,
@@ -66,7 +7,7 @@ import {
   Link,
   List,
   ListItem,
-} from '@mui/material';
+} from "@mui/material";
 
 const Footer = () => {
   return (
@@ -74,7 +15,11 @@ const Footer = () => {
       <Paper id="lgx-footer" className="lgx-footer-black">
         <div className="lgx-inner-footer">
           <Container>
-            <Grid container spacing={3} className="lgx-footer-area footer-custom-menu">
+            <Grid
+              container
+              spacing={3}
+              className="lgx-footer-area footer-custom-menu"
+            >
               <Grid item xs={12} sm={6} md={3}>
                 <div className="lgx-footer-single footer-brand">
                   <img
@@ -147,7 +92,8 @@ const Footer = () => {
                     </Typography>
                   </Link>
                   <address>
-                    Dhigna Limited, 30 Churchill place, Canary wharf, London E14 5RE United Kingdom
+                    Dhigna Limited, 30 Churchill place, Canary wharf, London E14
+                    5RE United Kingdom
                   </address>
                   <Typography variant="body2" className="text">
                     <i className="fas fa-phone-alt"></i> +44 204577 1234
@@ -171,22 +117,34 @@ const Footer = () => {
                   </Typography>
                   <ul className="list-inline lgx-social-footer">
                     <li>
-                      <Link href="https://www.facebook.com/DhignaGroup" target="_blank">
+                      <Link
+                        href="https://www.facebook.com/DhignaGroup"
+                        target="_blank"
+                      >
                         <i className="fab fa-facebook-f"></i>
                       </Link>
                     </li>
                     <li>
-                      <Link href="https://twitter.com/DhignaGroup" target="_blank">
+                      <Link
+                        href="https://twitter.com/DhignaGroup"
+                        target="_blank"
+                      >
                         <i className="fab fa-twitter"></i>
                       </Link>
                     </li>
                     <li>
-                      <Link href="https://www.instagram.com/dhignagroup/" target="_blank">
+                      <Link
+                        href="https://www.instagram.com/dhignagroup/"
+                        target="_blank"
+                      >
                         <i className="fab fa-instagram"></i>
                       </Link>
                     </li>
                     <li>
-                      <Link href="https://www.linkedin.com/company/dhignagroup/" target="_blank">
+                      <Link
+                        href="https://www.linkedin.com/company/dhignagroup/"
+                        target="_blank"
+                      >
                         <i className="fab fa-linkedin"></i>
                       </Link>
                     </li>
@@ -198,12 +156,12 @@ const Footer = () => {
             <div className="lgx-footer-bottom">
               <div className="lgx-copyright">
                 <Typography variant="body2">
-                  <span>©</span> 2023{' '}
+                  <span>©</span> 2023{" "}
                   <Link href="/" color="inherit">
                     Dhigna Events
                   </Link>
                   <br />
-                  Dhigna Events<strong>v1.8</strong>. Product by{' '}
+                  Dhigna Events<strong>v1.8</strong>. Product by{" "}
                   <Link href="/" target="_blank" color="inherit">
                     Dhigna Events
                   </Link>

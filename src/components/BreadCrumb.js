@@ -1,9 +1,9 @@
-import React from 'react';
-import { Container, Breadcrumbs, Link, Typography } from '@mui/material';
+import React from "react";
+import { Container, Breadcrumbs, Link, Typography } from "@mui/material";
 
 const BreadCrumb = () => {
   return (
-    <section style={{marginBottom:"80px"}}>
+    <section style={{ marginBottom: "80px" }}>
       <div id="lgx-schedule" className="lgx-schedule lgx-schedule-dark">
         <div
           className="lgx-inner-breadcrumb"

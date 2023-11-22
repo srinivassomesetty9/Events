@@ -1,6 +1,6 @@
-import React from 'react';
-import { Container, Grid, Typography } from '@mui/material';
-import { CalendarToday, LocalOffer, DirectionsWalk } from '@mui/icons-material';
+import React from "react";
+import { Container, Grid, Typography } from "@mui/material";
+import { CalendarToday, LocalOffer, DirectionsWalk } from "@mui/icons-material";
 
 const Customer = () => {
   return (

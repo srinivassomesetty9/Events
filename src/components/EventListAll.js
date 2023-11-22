@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Button, Container, Grid, Typography } from "@mui/material";
+import { Container, Grid } from "@mui/material";
 import EventCard from "./EventCard";
 
 const EventListAll = () => {
@@ -132,7 +132,7 @@ const EventListAll = () => {
       price2: "Red: 90.00 GBP",
       category: "",
     },
-     // Add more events as needed
+    // Add more events as needed
   ];
   console.log("EL");
   return (

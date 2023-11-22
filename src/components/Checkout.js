@@ -2,14 +2,9 @@ import React, { useState } from "react";
 import {
   Container,
   Grid,
-  Paper,
   Typography,
-  TextField,
   Button,
   FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
   List,
   ListItem,
   ListItemText,
@@ -23,7 +18,6 @@ import {
 import TopBar from "./TopBar";
 import Footer from "./Footer";
 import BreadCrumb from "./BreadCrumb";
-import FilterEvent from "./FilterEvent";
 import { Fingerprint, PersonAdd } from "@mui/icons-material";
 import { connect } from "react-redux";
 import { updateQuantity } from "../redux/action/index.js";
@@ -139,7 +133,7 @@ const Checkout = ({ ticket, index, updateQuantity }) => {
               </Typography>
 
               <FormControl component="fieldset" className="my-3 pl-3">
-                <FormGroup style={{color:"grey"}}>
+                <FormGroup style={{ color: "grey" }}>
                   <FormControlLabel
                     control={<Radio id="payment_method_wallet" />}
                     label="Pay By Dhigna Wallet"
@@ -151,7 +145,11 @@ const Checkout = ({ ticket, index, updateQuantity }) => {
                   />
                 </FormGroup>
 
-                <Typography variant="body2" className="mt-5" style={{color:"grey"}}>
+                <Typography
+                  variant="body2"
+                  className="mt-5"
+                  style={{ color: "grey" }}
+                >
                   This order is subject to dhigna{" "}
                   <Link href="/" target="_blank">
                     Terms and Conditions
@@ -163,7 +161,7 @@ const Checkout = ({ ticket, index, updateQuantity }) => {
                   .
                 </Typography>
 
-                <div className="mt-4" style={{color:"grey"}}>
+                <div className="mt-4" style={{ color: "grey" }}>
                   <FormControlLabel
                     control={<Checkbox id="payment_method_offline" />}
                     label="Amount is non-refundable and non-transferable."

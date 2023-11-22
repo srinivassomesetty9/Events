@@ -1,5 +1,5 @@
-import React from 'react';
-import { Container, Grid, Typography } from '@mui/material';
+import React from "react";
+import { Container, Grid, Typography } from "@mui/material";
 import "./EventOrganizer.css";
 
 const EventOrganizer = () => {
@@ -7,7 +7,10 @@ const EventOrganizer = () => {
     <section id="lgx-schedule" className="lgx-schedule lgx-schedule-dark">
       <div
         className="lgx-inner"
-        style={{ backgroundImage: 'url("https://events.dhigna.com/frontend-assets?path=img%2Fbg-pattern.png")' }}
+        style={{
+          backgroundImage:
+            'url("https://events.dhigna.com/frontend-assets?path=img%2Fbg-pattern.png")',
+        }}
       >
         <Container>
           <Grid container spacing={3}>

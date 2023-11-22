@@ -1,8 +1,9 @@
-import React from 'react';
-import { Container, Grid, Typography, Button } from '@mui/material';
-
+import React from "react";
+import { Container, Grid, Typography, Button } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 
 const Blogs = () => {
+  let navigate = useNavigate();
   return (
     <section>
       <div className="lgx-inner">
@@ -79,7 +80,11 @@ const Blogs = () => {
             </Grid>
           </Grid>
           <div className="section-btn-area">
-            <Button href="/" variant="contained" className="lgx-btn">
+            <Button
+              onClick={() => navigate("/")}
+              variant="contained"
+              className="lgx-btn"
+            >
               <i className="fas fa-blog"></i> View All Blogs
             </Button>
           </div>

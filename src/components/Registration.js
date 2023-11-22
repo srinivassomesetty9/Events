@@ -3,9 +3,6 @@ import "./Login.css";
 import {
   Box,
   Button,
-  Checkbox,
-  Container,
-  FormControlLabel,
   Grid,
   IconButton,
   InputAdornment,
@@ -163,7 +160,8 @@ const Registration = () => {
                     <Grid item xs={12} md={9} style={{ textAlign: "right" }}>
                       <span>
                         {" "}
-                        Already you have an account? <a href="/login">Login</a>
+                        Already you have an account?{" "}
+                        <a onClick={() => navigate("/login")}>Login</a>
                       </span>
                     </Grid>
                   </Grid>

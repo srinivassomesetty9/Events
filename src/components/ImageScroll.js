@@ -1,8 +1,8 @@
-import React from 'react';
-import Slider from 'react-slick';
-import { Card, CardMedia, Grid, Typography } from '@mui/material';
-import 'slick-carousel/slick/slick.css';
-import 'slick-carousel/slick/slick-theme.css';
+import React from "react";
+import Slider from "react-slick";
+import { Card, CardMedia, Grid, Typography } from "@mui/material";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 
 const ImageScroll = ({ images }) => {
   const settings = {
@@ -11,7 +11,7 @@ const ImageScroll = ({ images }) => {
     speed: 800,
     slidesToShow: 1,
     slidesToScroll: 1,
-    autoplay: true, 
+    autoplay: true,
     autoplaySpeed: 2000,
   };
 

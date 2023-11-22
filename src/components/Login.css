@@ -1,8 +1,7 @@
-
 /***Login style start***/
 .loginwrap {
-  background-color: #F4F5FA;
-  font-family: 'Roboto', sans-serif;
+  background-color: #f4f5fa;
+  font-family: "Roboto", sans-serif;
   height: calc(100vh + 8px);
 }
 

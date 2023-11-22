@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import React from "react";
 import { Button, Container, Grid, Typography } from "@mui/material";
 import EventCard from "./EventCard";
+import { useNavigate } from "react-router-dom";
 
 const TopSelling = () => {
   // Sample event data (replace with your actual data)
-
+  let navigate = useNavigate();
   const events = [
     {
       link: "/eventdetail",
@@ -40,12 +41,13 @@ const TopSelling = () => {
 
   return (
     <div id="lgx-schedule" className="lgx-schedule lgx-schedule-dark">
-       <div
-          className="lgx-inner"
-          style={{
-            backgroundImage: 'url("https://events.dhigna.com/frontend-assets?path=img%2Fbg-pattern.png")',
-          }}
-        ></div>
+      <div
+        className="lgx-inner"
+        style={{
+          backgroundImage:
+            'url("https://events.dhigna.com/frontend-assets?path=img%2Fbg-pattern.png")',
+        }}
+      ></div>
       <Container>
         <div className="lgx-heading">
           <Typography variant="h2" className="heading">
@@ -61,7 +63,7 @@ const TopSelling = () => {
         </Grid>
         <div className="section-btn-area">
           <Button
-            href="/events"
+            onClick={() => navigate("/events")}
             variant="contained"
             color="secondary"
           >

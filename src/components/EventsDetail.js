@@ -1,11 +1,6 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
+import React, { useState } from "react";
 import TopBar from "./TopBar";
 import Footer from "./Footer";
-import BreadCrumb from "./BreadCrumb";
-import FilterEvent from "./FilterEvent";
-import EventList from "./EventList";
-import EventListAll from "./EventListAll";
 import SeatingChart from "./SeatingChart";
 
 const EventsDetail = () => {
@@ -22,7 +17,7 @@ const EventsDetail = () => {
       <div className="main">
         <TopBar />
         <div>
-         <SeatingChart />
+          <SeatingChart />
           {/* <EventListAll /> */}
 
           {/* <EventList /> */}

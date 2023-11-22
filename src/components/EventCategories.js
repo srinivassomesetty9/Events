@@ -1,29 +1,34 @@
-import React from 'react';
+import React from "react";
 
-
-import { Card, CardActionArea, CardContent, Container, Typography } from '@mui/material';
+import {
+  Card,
+  CardActionArea,
+  CardContent,
+  Container,
+  Typography,
+} from "@mui/material";
 
 const EventCategories = () => {
   const categories = [
     {
-      name: 'Upcoming Events',
-      image: '/Eventc1.png',
-      link: '/',
+      name: "Upcoming Events",
+      image: "/Eventc1.png",
+      link: "/",
     },
     {
-      name: 'Entertainment',
-      image: '/Eventc2.jpg',
-      link: '/',
+      name: "Entertainment",
+      image: "/Eventc2.jpg",
+      link: "/",
     },
     {
-      name: 'Music',
-      image: '/Eventc3.jpg',
-      link: '/',
+      name: "Music",
+      image: "/Eventc3.jpg",
+      link: "/",
     },
     {
-      name: 'Dances',
-      image: '/Eventc4.jpg',
-      link: '/',
+      name: "Dances",
+      image: "/Eventc4.jpg",
+      link: "/",
     },
   ];
 
@@ -33,7 +38,8 @@ const EventCategories = () => {
         <div
           className="lgx-inner"
           style={{
-            backgroundImage: 'url("https://events.dhigna.com/frontend-assets?path=img%2Fbg-pattern.png")',
+            backgroundImage:
+              'url("https://events.dhigna.com/frontend-assets?path=img%2Fbg-pattern.png")',
           }}
         >
           <Container>
@@ -52,7 +58,11 @@ const EventCategories = () => {
                       <CardActionArea component="a" href={category.link}>
                         <img src={category.image} alt={category.name} />
                         <CardContent>
-                          <Typography variant="body2" color="textSecondary" component="span">
+                          <Typography
+                            variant="body2"
+                            color="textSecondary"
+                            component="span"
+                          >
                             {category.name}
                           </Typography>
                         </CardContent>

@@ -9,9 +9,11 @@ import UpcomingEvent from "./UpcomingEvent";
 import EventCategories from "./EventCategories";
 import TopSelling from "./TopSelling";
 import ExploreCities from "./ExploreCities";
-import ImageScroll from "./ImageScroll";
+import { Button } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 
 const Home = () => {
+  let navigate = useNavigate();
   const citiesData = [
     {
       imageUrl: "/Home.jpg",
@@ -36,10 +38,10 @@ const Home = () => {
     // Add more cities as needed
   ];
   const images = [
-    { url: '/Eventc1.png' },
-    { url: '/Eventc2.jpg' },
-    { url: '/Eventc3.jpg' },
-    { url: '/Eventc4.jpg' },
+    { url: "/Eventc1.png" },
+    { url: "/Eventc2.jpg" },
+    { url: "/Eventc3.jpg" },
+    { url: "/Eventc4.jpg" },
     // Add more images as needed
   ];
   return (
@@ -49,7 +51,7 @@ const Home = () => {
         <>
           <div className="image-container">
             <>
-            {/* <ImageScroll images={images} /> */}
+              {/* <ImageScroll images={images} /> */}
               <img src="./music-104.gif" className="background-image" />
               <div class="lgx-container">
                 <div class="lgx-hover-link">
@@ -58,13 +60,16 @@ const Home = () => {
                       <h3 class="subtitle lgx-delay lgx-fadeInDown">
                         Event Management And Selling Platform
                       </h3>{" "}
-                      <h2 style={{marginRight:"515px"}}>Dhigna Events</h2>{" "}
+                      <h2 style={{ marginRight: "515px" }}>Dhigna Events</h2>{" "}
                       <div class="action-area">
                         <div class="lgx-video-area">
-                          <a href="/events" class="lgx-btn lgx-btn-red">
+                          <Button
+                            onClick={() => navigate("/events")}
+                            class="lgx-btn lgx-btn-red"
+                          >
                             Get Event Tickets &nbsp;&nbsp;{" "}
                             <i class="fas fa-long-arrow-alt-right"></i>
-                          </a>
+                          </Button>
                         </div>
                       </div>
                     </div>
