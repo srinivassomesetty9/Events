@@ -64,8 +64,8 @@ const TopSelling = () => {
         <div className="section-btn-area">
           <Button
             onClick={() => navigate("/events")}
-            variant="contained"
-            color="secondary"
+            variant="outlined"
+            color="primary"
           >
             <i className="fas fa-calendar-day"></i> View All Events
           </Button>

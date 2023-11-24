@@ -7,6 +7,8 @@ import "./App.css";
 import Login from "./components/Login";
 import EventsDetail from "./components/EventsDetail";
 import Checkout from "./components/Checkout";
+import Blogs1 from "./components/Blogs1";
+import HowItWorks from "./components/HowItWorks";
 
 function App() {
   return (
@@ -17,7 +19,9 @@ function App() {
         <Route path="/eventsdetail" element={<EventsDetail />} />
         <Route path="/login" element={<Login />} />
         <Route path="/checkout" element={<Checkout />} />
-        <Route path="/register" element={<Registration />} />
+        <Route path="/signup" element={<Registration />} />
+        <Route path="/blogs1" element={<Blogs1 />} />
+        <Route path="/works" element={<HowItWorks />} />
       </Routes>
     </div>
   );

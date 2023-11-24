@@ -81,7 +81,7 @@ const Login = () => {
                   style={{ marginBottom: "15px", textAlign: "left" }}
                 >
                   <h1 className="welcomheading">Welcome! </h1>
-                  <p>Please sign-in to your account</p>
+                  <p>Login to continue</p>
                 </Grid>
                 <Grid item xs={12} style={{ marginBottom: "15px" }}>
                   <TextField
@@ -99,7 +99,7 @@ const Login = () => {
                   <TextField
                     fullWidth
                     id="outlined-password-input"
-                    label="Password"
+                    label="Pin"
                     // type={showPassword ? "text" : "password"}
                     color="primary"
                     InputProps={{
@@ -142,7 +142,7 @@ const Login = () => {
                         }}
                         // onClick={() => navigate("/forgotPassword")}
                       >
-                        Forgot Password?
+                        Forgot Pin?
                       </Button>
                     </Grid>
                   </Grid>
@@ -157,7 +157,7 @@ const Login = () => {
                     Login
                   </Button>
                 </Grid>
-                <Grid item xs={12}>
+                <Grid item xs={12} style={{ marginBottom: "10px" }}>
                   <Button
                     variant="outlined"
                     // onClick={handleSubmit}
@@ -167,6 +167,24 @@ const Login = () => {
                   >
                     Back to Home
                   </Button>
+                </Grid>
+                <Grid
+                  item
+                  xs={12}
+                  style={{ marginBottom: "15px", textAlign: "left" }}
+                >
+                  <p >Didn't have an account?<Button
+                        variant="text"
+                        style={{
+                          color: "#002355",
+                          fontSize: "12px",
+                          textTransform: "capitalize",
+                        }}
+                        onClick={() => navigate("/register")}
+                      >
+                        Signup
+                      </Button></p>
+                  
                 </Grid>
                 <Grid>
                   {/* {auth && auth.status && auth.status.status == 200 ? <SuccessAlert msg={auth.status ? auth.status.data.message : ''} /> : ''}

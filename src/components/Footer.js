@@ -8,6 +8,7 @@ import {
   List,
   ListItem,
 } from "@mui/material";
+import { Facebook, Instagram, LinkedIn, Twitter } from "@mui/icons-material";
 
 const Footer = () => {
   return (
@@ -53,8 +54,13 @@ const Footer = () => {
                       </Link>
                     </ListItem>
                     <ListItem>
-                      <Link href="/blogs" color="inherit">
+                      <Link href="/blogs1" color="inherit">
                         Blogs
+                      </Link>
+                    </ListItem>
+                    <ListItem>
+                      <Link href="/works" color="inherit">
+                        How It Works
                       </Link>
                     </ListItem>
                     <ListItem>
@@ -115,13 +121,13 @@ const Footer = () => {
                   <Typography variant="body2" className="text">
                     Find us on social platforms
                   </Typography>
-                  <ul className="list-inline lgx-social-footer">
+                  <ul className="list-inline lgx-social-footer" style={{listStyle:"none",display:"flex"}}>
                     <li>
                       <Link
                         href="https://www.facebook.com/DhignaGroup"
                         target="_blank"
                       >
-                        <i className="fab fa-facebook-f"></i>
+                        <Facebook />
                       </Link>
                     </li>
                     <li>
@@ -129,7 +135,7 @@ const Footer = () => {
                         href="https://twitter.com/DhignaGroup"
                         target="_blank"
                       >
-                        <i className="fab fa-twitter"></i>
+                        <Twitter />
                       </Link>
                     </li>
                     <li>
@@ -137,7 +143,7 @@ const Footer = () => {
                         href="https://www.instagram.com/dhignagroup/"
                         target="_blank"
                       >
-                        <i className="fab fa-instagram"></i>
+                        <Instagram />
                       </Link>
                     </li>
                     <li>
@@ -145,7 +151,7 @@ const Footer = () => {
                         href="https://www.linkedin.com/company/dhignagroup/"
                         target="_blank"
                       >
-                        <i className="fab fa-linkedin"></i>
+                        <LinkedIn />
                       </Link>
                     </li>
                   </ul>

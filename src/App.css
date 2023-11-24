@@ -123,9 +123,9 @@
 }
 .brand-slogan {
   color: #0a0909;
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 500;
-  top: 36px;
+  top: 42px;
 }
 /* ImageWithText.css */
 
@@ -167,7 +167,7 @@
 }
 
 .lgx-inner-breadcrumb {
-  padding: 50px 0;
+  padding: 30px 0;
 }
 
 .breadcrumb-area {
@@ -255,10 +255,6 @@
   align-items: center;
 }
 
-.lgx-heading {
-  text-align: center;
-  margin-bottom: 30px;
-}
 
 .subheading {
   color: #555;
@@ -280,7 +276,7 @@
 
 .lgx-travelinfo-single i {
   margin-bottom: 20px;
-  color: #ff5722; /* Material-UI's primary color */
+  color: #ff5722; /* Material-UIs primary color */
 }
 
 .title {
@@ -299,10 +295,6 @@
   padding: 50px 0;
 }
 
-.lgx-heading {
-  text-align: center;
-  margin-bottom: 30px;
-}
 
 .lgx-single-news {
   margin-bottom: 30px;
@@ -369,20 +361,6 @@
   padding: 50px 0;
 }
 
-.lgx-heading {
-  text-align: center;
-  margin-bottom: 30px;
-
-  h2 {
-    font-size: 2.5rem;
-    color: #333;
-    margin-bottom: 10px;
-  }
-
-  i {
-    color: #f00;
-  }
-}
 
 .lgx-event {
   border: 1px solid #ddd;
@@ -483,13 +461,6 @@
   }
 }
 
-.lgx-heading {
-  display: block;
-  margin-bottom: 4rem;
-  margin-top: 0;
-  overflow: hidden;
-  text-align: center;
-}
 
 .lgx-heading .subheading {
   color: rgba(50, 51, 51, 0.8);
@@ -565,10 +536,6 @@
   border-radius: 10px;
 }
 
-.lgx-heading {
-  text-align: center;
-  margin-bottom: 40px;
-}
 
 .sponsors-area {
   display: flex;
@@ -707,10 +674,6 @@
 
 /* Seating Chart */
 
-#buy-tickets {
-  background-image: url("https://events.dhigna.com/frontend-assets?path=img%2Fbg-pattern.png");
-  padding: 50px 0;
-}
 
 .heading {
   font-size: 2.5rem;
@@ -758,7 +721,7 @@ img {
   display: flex;
   /* margin-left: -1rem; */
   margin-right: -1rem;
-  margin-top: 4.2rem;
+  margin-top: 2rem;
 }
 .lgx-about-service .lgx-single-service-color {
   background: #1b89ef;
@@ -776,7 +739,7 @@ img {
   flex: 1;
   margin-left: 1rem;
   margin-right: 1rem;
-  padding: 2rem 3rem;
+  padding: 1rem 1rem;
 }
 .lgx-about-service .lgx-single-service-color .icon {
   color: #e2e2e2;
@@ -959,3 +922,108 @@ img {
 a {
   text-decoration: none;
 }
+
+.lgx-heading {
+  margin: 0px 0px 8px 0px;
+  padding: 20px 0px 0px 0px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.headerText {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+/* cities css */
+
+#lgx-schedule {
+  overflow: hidden;
+}
+
+.scrolling-container {
+  display: flex;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  margin-bottom: 15px;
+}
+
+.scrolling-container::-webkit-scrollbar {
+  height: 8px;
+}
+
+.scrolling-container::-webkit-scrollbar-thumb {
+  background-color: #888;
+  border-radius: 4px;
+}
+
+.scrolling-container::-webkit-scrollbar-track {
+  background-color: #f2f2f2;
+}
+
+.row {
+  margin: 0 -8px;
+}
+
+.scroll-button {
+  font-size: 24px;
+  padding: 10px;
+}
+
+/* Additional styles as needed */
+
+/* Featured events */
+
+/* Add this to your CSS file */
+.section-btn-area {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 20px;
+}
+
+.icon-button {
+  margin-left: 10px;
+}
+
+/* Ticket Selection */
+
+/* TicketSelection.css */
+
+.ticket-selection-container {
+  margin-top: 30px;
+}
+
+.ticket-type-container {
+  border: 1px solid #ccc;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.ticket-type-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.quantity {
+  margin-bottom: 10px;
+}
+
+.attendee-details {
+  margin-top: 10px;
+}
+
+.attendee-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.heading {
+  margin-bottom: 20px;
+}
+
+/* Add more styles as needed */

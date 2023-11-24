@@ -9,8 +9,10 @@ import UpcomingEvent from "./UpcomingEvent";
 import EventCategories from "./EventCategories";
 import TopSelling from "./TopSelling";
 import ExploreCities from "./ExploreCities";
-import { Button } from "@mui/material";
+import { Breadcrumbs, Button } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import ImageScroll from "./ImageScroll";
+import HomeIcon from '@mui/icons-material/Home';
 
 const Home = () => {
   let navigate = useNavigate();
@@ -20,40 +22,44 @@ const Home = () => {
       cityName: "Wembley",
     },
     {
-      imageUrl: "/Home.jpg",
-      cityName: "Wembley",
+      imageUrl: "/london.jpg",
+      cityName: "London",
+    },
+    {
+      imageUrl: "/norwich.jpg",
+      cityName: "Norwich",
+    },
+    {
+      imageUrl: "/cambridge.jpg",
+      cityName: "Cambride",
     },
     {
       imageUrl: "/Home.jpg",
       cityName: "Wembley",
     },
     {
-      imageUrl: "/Home.jpg",
-      cityName: "Wembley",
-    },
-    {
-      imageUrl: "/Home.jpg",
-      cityName: "Wembley",
+      imageUrl: "/london.jpg",
+      cityName: "London",
     },
     // Add more cities as needed
   ];
   const images = [
-    { url: "/Eventc1.png" },
-    { url: "/Eventc2.jpg" },
-    { url: "/Eventc3.jpg" },
-    { url: "/Eventc4.jpg" },
+    // { url: "/banner1.jpg" },
+    { url: "/banner2.jpg" },
+    { url: "/banner4.png" },
     // Add more images as needed
   ];
   return (
     <div>
       <div className="main">
         <TopBar />
-        <>
-          <div className="image-container">
-            <>
-              {/* <ImageScroll images={images} /> */}
-              <img src="./music-104.gif" className="background-image" />
-              <div class="lgx-container">
+        {/* <div className="heading" style={{backgroundColor:"grey", marginTop:"40px"}}> */}
+        {/* <h2>Event Management And Selling Platform</h2> */}
+        <div className="image-container">
+          <>
+            <ImageScroll images={images} />
+            {/* <img src="./music-104.gif" className="background-image" /> */}
+            {/* <div class="lgx-container">
                 <div class="lgx-hover-link">
                   <div class="lgx-vertical">
                     <div class="lgx-banner-info">
@@ -75,20 +81,28 @@ const Home = () => {
                     </div>
                   </div>
                 </div>
-              </div>
-            </>
-          </div>
-        </>
+              </div> */}
+          </>
+          {/* </div> */}
+        </div>
+        <></>
 
         {/* Add content similar to the home page of the target website */}
+        {/* <Breadcrumbs
+              separator="›"
+              aria-label="breadcrumb"
+              icon={<HomeIcon fontSize="small" />}
+            >
+             <h5>Home</h5>
+            </Breadcrumbs> */}
         <EventList />
         <EventCategories />
         <UpcomingEvent />
-        <TopSelling />
-        <ExploreCities cities={citiesData} heading="Explroe Best Cities" />
-        <Blogs />
-        <EventOrganizer />
-        <Customer />
+        {/* <TopSelling /> */}
+        <ExploreCities cities={citiesData} heading="Explore Best Cities" />
+        {/* <Blogs /> */}
+        {/* <EventOrganizer />
+        <Customer /> */}
       </div>
       <Footer />
     </div>

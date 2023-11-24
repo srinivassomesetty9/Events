@@ -4,13 +4,13 @@ import "./EventOrganizer.css";
 
 const EventOrganizer = () => {
   return (
-    <section id="lgx-schedule" className="lgx-schedule lgx-schedule-dark">
+    <section id="lgx-schedule" className="lgx-schedule ">
       <div
         className="lgx-inner"
-        style={{
-          backgroundImage:
-            'url("https://events.dhigna.com/frontend-assets?path=img%2Fbg-pattern.png")',
-        }}
+        // style={{
+        //   backgroundImage:
+        //     'url("https://events.dhigna.com/frontend-assets?path=img%2Fbg-pattern.png")',
+        // }}
       >
         <Container>
           <Grid container spacing={3}>

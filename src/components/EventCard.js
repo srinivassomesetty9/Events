@@ -31,27 +31,27 @@ const EventCard = ({ event }) => {
       <div>
         <StyledPaper elevation={3}>
           <a href={link} style={{ textDecoration: "none", color: "inherit" }}>
-            <div className="lgx-event__tag">
+            {/* <div className="lgx-event__tag">
               <span>{tag}</span>
-            </div>
+            </div> */}
             <div className="lgx-event__image">
               <img
                 src={imageSrc}
                 alt=""
                 className="event-image"
-                style={{ width: "100%", borderRadius: "8px" }}
+                style={{ width: "100%", borderRadius: "8px", padding:"0"}}
               />
             </div>
             <div className="lgx-event__info">
               <div className="meta-wrapper">
                 <Typography variant="subtitle1">{date}</Typography>
-                <Typography variant="subtitle1">{time}</Typography>
-                <Typography variant="subtitle1">{location}</Typography>
+                {/* <Typography variant="subtitle1">{time}</Typography>
+                <Typography variant="subtitle1">{location}</Typography> */}
               </div>
               <Typography variant="h5" gutterBottom>
                 {title}
               </Typography>
-              <Typography variant="subtitle2" style={{ height: "20px" }}>
+              {/* <Typography variant="subtitle2" style={{ height: "20px" }}>
                 {subtitle1}
               </Typography>
               <Typography
@@ -60,15 +60,15 @@ const EventCard = ({ event }) => {
                 style={{ height: "20px" }}
               >
                 {subtitle2}
-              </Typography>
+              </Typography> */}
             </div>
-            <div className="lgx-event__footer">
+            {/* <div className="lgx-event__footer">
               <div>{price1}</div>
               <div>{price2}</div>
             </div>
             <div className="lgx-event__category">
               <span></span>
-            </div>
+            </div> */}
           </a>
         </StyledPaper>
       </div>

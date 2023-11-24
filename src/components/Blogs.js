@@ -79,7 +79,7 @@ const Blogs = () => {
               </div>
             </Grid>
           </Grid>
-          <div className="section-btn-area">
+          {/* <div className="section-btn-area">
             <Button
               onClick={() => navigate("/")}
               variant="contained"
@@ -87,7 +87,7 @@ const Blogs = () => {
             >
               <i className="fas fa-blog"></i> View All Blogs
             </Button>
-          </div>
+          </div> */}
         </Container>
       </div>
     </section>

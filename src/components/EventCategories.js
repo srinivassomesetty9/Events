@@ -13,34 +13,34 @@ const EventCategories = () => {
     {
       name: "Upcoming Events",
       image: "/Eventc1.png",
-      link: "/",
+      link: "/events",
     },
     {
       name: "Entertainment",
       image: "/Eventc2.jpg",
-      link: "/",
+      link: "/events",
     },
     {
       name: "Music",
       image: "/Eventc3.jpg",
-      link: "/",
+      link: "/events",
     },
     {
       name: "Dances",
       image: "/Eventc4.jpg",
-      link: "/",
+      link: "/events",
     },
   ];
 
   return (
     <section>
-      <div id="lgx-schedule" className="lgx-schedule lgx-schedule-dark">
+      <div id="lgx-schedule" className="lgx-schedule ">
         <div
           className="lgx-inner"
-          style={{
-            backgroundImage:
-              'url("https://events.dhigna.com/frontend-assets?path=img%2Fbg-pattern.png")',
-          }}
+          // style={{
+          //   backgroundImage:
+          //     'url("https://events.dhigna.com/frontend-assets?path=img%2Fbg-pattern.png")',
+          // }}
         >
           <Container>
             <div className="row">

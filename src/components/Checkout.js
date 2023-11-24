@@ -23,6 +23,7 @@ import { connect } from "react-redux";
 import { updateQuantity } from "../redux/action/index.js";
 import TicketSelection from "./TicketSelection.js";
 import ModalDetails from "./ModalDetails.js";
+import SeatingChart from "./SeatingChart.js";
 
 const Checkout = ({ ticket, index, updateQuantity }) => {
   const ticketsData = [
@@ -76,10 +77,11 @@ const Checkout = ({ ticket, index, updateQuantity }) => {
     <div>
       <div className="main">
         <TopBar />
-        <BreadCrumb />
+        {/* <BreadCrumb /> */}
+        <SeatingChart />
         <div style={{ marginBottom: "80px" }}>
           <Container>
-            <Grid item mb={12}>
+            {/* <Grid item mb={12}>
               <Typography
                 variant="h4"
                 className="heading"
@@ -87,40 +89,8 @@ const Checkout = ({ ticket, index, updateQuantity }) => {
               >
                 Get your tickets now
               </Typography>
-            </Grid>
-            <Grid item mb={8}>
-              <Typography variant="h5" className=" heading subheading">
-                Checkout
-              </Typography>
-            </Grid>
-            <Grid className="info">
-              <Typography variant="h5" align="center" gutterBottom>
-                Booking Info
-              </Typography>
-              <List>
-                <ListItem>
-                  <ListItemText
-                    primary="Event Category"
-                    secondary="Pathaans Of Bollywood"
-                  />
-                  <ListItemText
-                    primary="Venue"
-                    secondary="OVO Arena Wembley - London"
-                  />
-                </ListItem>
-                <ListItem>
-                  <ListItemText
-                    primary="Start - End Date"
-                    secondary="12-Jan-2024 - 13-Jan-2024"
-                  />
-                  <ListItemText
-                    primary="Timings"
-                    secondary="11:30 PM - 03:30 AM (IST)"
-                  />
-                </ListItem>
-              </List>
-            </Grid>
-
+            </Grid> */}
+            
             {/* Tickets */}
             <Grid>
               <TicketSelection />

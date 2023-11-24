@@ -1,0 +1,40 @@
+/* TicketSelection.css */
+
+.ticket-selection-container {
+    padding: 20px;
+  }
+  
+  .heading {
+    color: #333;
+    margin-bottom: 20px;
+  }
+  
+  .container {
+    background-color: #f4f4f4;
+    border: 1px solid #ddd;
+    padding: 20px;
+    margin-bottom: 20px;
+  }
+  
+  h5 {
+    color: #007bff;
+  }
+  
+  .quantity {
+    margin-top: 10px;
+    margin-bottom: 10px;
+  }
+  
+  body2 {
+    font-size: 14px;
+  }
+  
+  .attendee-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+  
+  /* Add more custom styles as needed */
+  

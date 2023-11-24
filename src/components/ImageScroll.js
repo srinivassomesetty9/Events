@@ -8,20 +8,20 @@ const ImageScroll = ({ images }) => {
   const settings = {
     dots: true,
     infinite: true,
-    speed: 800,
+    speed: 3500,
     slidesToShow: 1,
     slidesToScroll: 1,
     autoplay: true,
-    autoplaySpeed: 2000,
+    autoplaySpeed: 3000,
   };
 
   return (
     <Grid container spacing={2}>
-      <Grid item xs={12}>
+      {/* <Grid item xs={12}>
         <Typography variant="h5" component="div" gutterBottom>
           Image Scroll
         </Typography>
-      </Grid>
+      </Grid> */}
       <Grid item xs={12}>
         <Slider {...settings}>
           {images.map((image, index) => (

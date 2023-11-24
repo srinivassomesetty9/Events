@@ -158,11 +158,17 @@ const Registration = () => {
                       {/* <FormControlLabel control={<Checkbox defaultChecked />} label="Remember Me" /> */}
                     </Grid>
                     <Grid item xs={12} md={9} style={{ textAlign: "right" }}>
-                      <span>
-                        {" "}
-                        Already you have an account?{" "}
-                        <a onClick={() => navigate("/login")}>Login</a>
-                      </span>
+                      <p >Already you have an account?<Button
+                        variant="text"
+                        style={{
+                          color: "#002355",
+                          fontSize: "12px",
+                          textTransform: "capitalize",
+                        }}
+                        onClick={() => navigate("/login")}
+                      >
+                        Login
+                      </Button></p>
                     </Grid>
                   </Grid>
                 </Grid>
