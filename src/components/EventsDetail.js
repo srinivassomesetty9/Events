@@ -125,15 +125,11 @@ const EventsDetail = () => {
                       <div>
                         {/* Date and Countdown Section */}
                         <div className="text-area">
-                          <Typography variant="body2">
-                            <span className="icon col-white">
-                              <DateRange />
-                            </span>
-                            12-Jan-2024
-                            <br />
-                            Till
-                            <br />
-                            13-Jan-2024
+                          <span className="icon col-white">
+                            <DateRange />
+                          </span>
+                          <Typography variant="body1">
+                            12-Jan-2024 Till 13-Jan-2024
                           </Typography>
                         </div>
                         {/* Add your Date and Countdown content here */}
@@ -142,50 +138,46 @@ const EventsDetail = () => {
                     {value === 1 && (
                       <div>
                         {/* Event Details Section */}
-                        <Typography variant="h4" className="heading">
-                          Event Details
-                        </Typography>
-                        <Grid item md={8} xs={12}>
-                          <div className="lgx-about-content-area">
-                            <Typography
-                              variant="body1"
-                              className="lgx-about-content"
-                              paragraph
-                            >
-                              {/* Add event description */}
-                              "Get ready for an unforgettable evening that will
-                              transport you to the heart of Bollywood's musical
-                              legacy! On January 12, 2024, starting at 6:00 PM,
-                              we are thrilled to invite you to experience the
-                              'Pathaans of Bollywood' - a grand celebration
-                              marking '25 Years of Vishal-Shekhar' at the iconic
-                              OVO Arena, Wembley, London. This is not just a
-                              concert; it's a tribute to two maestros who have
-                              defined the Bollywood music scene for a quarter of
-                              a century. Vishal Dadlani and Shekhar Ravjiani,
-                              the magical duo behind countless chart-toppers and
-                              soulful melodies, are all set to mesmerize you
-                              with their musical journey. From the foot-tapping
-                              beats of 'Bachna Ae Haseeno' to the soulful tunes
-                              of 'Baby Ko Base Pasand Hai,' their music has
-                              touched our hearts and left an indelible mark on
-                              Indian cinema. The evening promises an
-                              electrifying atmosphere as the stage lights up
-                              with their iconic hits, backed by a spectacular
-                              ensemble of musicians. It's a once-in-a-lifetime
-                              opportunity to experience the magic of Bollywood
-                              music live, in the heart of London. Gather your
-                              friends and family, book your tickets early, and
-                              be prepared for a night filled with nostalgia,
-                              emotions, and sheer musical brilliance. Let's come
-                              together to celebrate not just the music but the
-                              indomitable spirit of Vishal-Shekhar, whose tunes
-                              have been the soundtrack of our lives. This is
-                              more than a concert; it's a musical journey you
-                              wouldn't want to miss.
-                            </Typography>
-                          </div>
-                        </Grid>
+                        {/* <Grid item md={9} xs={12}> */}
+                        <div className="lgx-about-content-area">
+                          <Typography
+                            variant="body1"
+                            className="lgx-about-content"
+                            paragraph
+                          >
+                            {/* Add event description */}
+                            "Get ready for an unforgettable evening that will
+                            transport you to the heart of Bollywood's musical
+                            legacy! On January 12, 2024, starting at 6:00 PM, we
+                            are thrilled to invite you to experience the
+                            'Pathaans of Bollywood' - a grand celebration
+                            marking '25 Years of Vishal-Shekhar' at the iconic
+                            OVO Arena, Wembley, London. This is not just a
+                            concert; it's a tribute to two maestros who have
+                            defined the Bollywood music scene for a quarter of a
+                            century. Vishal Dadlani and Shekhar Ravjiani, the
+                            magical duo behind countless chart-toppers and
+                            soulful melodies, are all set to mesmerize you with
+                            their musical journey. From the foot-tapping beats
+                            of 'Bachna Ae Haseeno' to the soulful tunes of 'Baby
+                            Ko Base Pasand Hai,' their music has touched our
+                            hearts and left an indelible mark on Indian cinema.
+                            The evening promises an electrifying atmosphere as
+                            the stage lights up with their iconic hits, backed
+                            by a spectacular ensemble of musicians. It's a
+                            once-in-a-lifetime opportunity to experience the
+                            magic of Bollywood music live, in the heart of
+                            London. Gather your friends and family, book your
+                            tickets early, and be prepared for a night filled
+                            with nostalgia, emotions, and sheer musical
+                            brilliance. Let's come together to celebrate not
+                            just the music but the indomitable spirit of
+                            Vishal-Shekhar, whose tunes have been the soundtrack
+                            of our lives. This is more than a concert; it's a
+                            musical journey you wouldn't want to miss.
+                          </Typography>
+                        </div>
+                        {/* </Grid> */}
                         {/* Add your Event Details content here */}
                       </div>
                     )}
@@ -195,7 +187,7 @@ const EventsDetail = () => {
                         {/* Add your Location and Time content here */}
                         <Grid container>
                           {/* Where Section */}
-                          <Grid item xs={12} sm={5} md={5} offset-md={1}>
+                          <Grid item xs={12} sm={6} md={5} offset-md={1}>
                             <div className="text-area">
                               <span className="icon col-white">
                                 <MapSharp />
@@ -214,10 +206,10 @@ const EventsDetail = () => {
                           {/* When Section */}
                           <Grid item xs={12} sm={5} md={5} offset-md={1}>
                             <div className="text-area">
+                              <span className="icon col-black">
+                                <Watch />
+                              </span>
                               <Typography variant="body2">
-                                <span className="icon col-black">
-                                  <Watch />
-                                </span>
                                 11:30 PM (IST)
                                 <br />
                                 Till

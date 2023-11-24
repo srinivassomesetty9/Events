@@ -9,6 +9,7 @@ import EventsDetail from "./components/EventsDetail";
 import Checkout from "./components/Checkout";
 import Blogs1 from "./components/Blogs1";
 import HowItWorks from "./components/HowItWorks";
+import Payment from "./components/Payment/Payment";
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
         <Route path="/signup" element={<Registration />} />
         <Route path="/blogs1" element={<Blogs1 />} />
         <Route path="/works" element={<HowItWorks />} />
+        <Route path="/payment" element={<Payment />} />
       </Routes>
     </div>
   );

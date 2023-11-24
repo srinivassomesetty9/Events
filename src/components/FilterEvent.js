@@ -63,7 +63,7 @@ const FilterEvent = () => {
     {
       link: "/eventsdetail",
       tag: "Upcoming",
-      imageSrc: "/featured3.jpg",
+      imageSrc: "/Dinner.jpg",
       date: "07-Oct-2024",
       time: "12:00 PM - 02:00 AM (IST)",
       location: "Wembley",
@@ -77,7 +77,7 @@ const FilterEvent = () => {
     {
       link: "/eventsdetail",
       tag: "Upcoming",
-      imageSrc: "/featured3.jpg",
+      imageSrc: "/meet.jpg",
       date: "06-Oct-2024",
       time: "07:00 PM - 10:00 PM (IST)",
       location: "Feltham",
@@ -105,7 +105,7 @@ const FilterEvent = () => {
     {
       link: "/eventsdetail",
       tag: "Upcoming",
-      imageSrc: "/featured3.jpg",
+      imageSrc: "/Tamil.jpg",
       date: "12-Jan-2024",
       time: "11:30 PM - 03:30 AM (IST)",
       location: "Harrow",
@@ -119,7 +119,7 @@ const FilterEvent = () => {
     {
       link: "/eventsdetail",
       tag: "Upcoming",
-      imageSrc: "/featured3.jpg",
+      imageSrc: "/adiye.jpg",
       date: "12-Jan-2024",
       time: "11:30 PM - 03:30 AM (IST)",
       location: "Wembley",
@@ -133,7 +133,7 @@ const FilterEvent = () => {
     {
       link: "/eventsdetail",
       tag: "Upcoming",
-      imageSrc: "/featured3.jpg",
+      imageSrc: "/roja.jpg",
       date: "24-Jan-2024",
       time: "11:30 PM - 03:30 AM (IST)",
       location: "RUISLIP",

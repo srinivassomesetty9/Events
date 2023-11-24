@@ -14,18 +14,18 @@ const SeatingChart = () => {
               Seating Chart
             </Typography>
           </Grid>
-          <Grid item xs={12}>
-            <Typography variant="h5" className="subheading">
+          <Grid item xs={12} >
+            <Typography variant="h5" className="heading subheading">
               Pathaans Of Bollywood
             </Typography>
-            <Typography variant="h5" className="subheading">
+            <Typography variant="h5" className="heading subheading">
               Get your tickets now
             </Typography>
           </Grid>
           <Grid item md={6} xs={12} className="text-center">
             <img src="/seat.png" alt="Pathaans Of Bollywood" style={{ width: "100%" }} />
           </Grid>
-          <Grid item md={6} sm={6} xs={12}>
+          <Grid item md={6} sm={6} xs={12} mt={4}>
             <Paper elevation={3} style={{ padding: "20px" }}>
               <Grid container spacing={2}>
                 <Grid item xs={12}>

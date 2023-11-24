@@ -55,17 +55,27 @@ const EventCategories = () => {
                 <div className="sponsors-area sponsors-area-border sponsors-area-col3">
                   {categories.map((category, index) => (
                     <Card key={index} className="single">
-                      <CardActionArea component="a" href={category.link}>
-                        <img src={category.image} alt={category.name} />
-                        <CardContent>
-                          <Typography
-                            variant="body2"
-                            color="textSecondary"
-                            component="span"
-                          >
-                            {category.name}
-                          </Typography>
-                        </CardContent>
+                      <CardActionArea
+                        component="a"
+                        href={category.link}
+                        style={{
+                          padding: "0",
+                          height: "179.09px",
+                          width: "268.64px",
+                        }}
+                      >
+                        <img
+                          src={category.image}
+                          alt={category.name}
+                          style={{
+                            padding: "0",
+                            height: "179.09px",
+                            width: "268.64px",
+                          }}
+                        />
+                        <div class="badges">
+                          <h2 class="badge badge-new">{category.name}</h2>
+                        </div>
                       </CardActionArea>
                     </Card>
                   ))}

@@ -18,12 +18,13 @@ import {
 import TopBar from "./TopBar";
 import Footer from "./Footer";
 import BreadCrumb from "./BreadCrumb";
-import { Fingerprint, PersonAdd } from "@mui/icons-material";
+import { ArrowForward, Fingerprint, PersonAdd } from "@mui/icons-material";
 import { connect } from "react-redux";
 import { updateQuantity } from "../redux/action/index.js";
 import TicketSelection from "./TicketSelection.js";
 import ModalDetails from "./ModalDetails.js";
 import SeatingChart from "./SeatingChart.js";
+import { useNavigate } from "react-router-dom";
 
 const Checkout = ({ ticket, index, updateQuantity }) => {
   const ticketsData = [
@@ -56,6 +57,8 @@ const Checkout = ({ ticket, index, updateQuantity }) => {
   const listItemStyle = {
     justifyContent: "space-between",
   };
+
+  let navigate = useNavigate();
 
   const deliveryFeesStyle = {
     paddingRight: 0,
@@ -95,9 +98,22 @@ const Checkout = ({ ticket, index, updateQuantity }) => {
             <Grid>
               <TicketSelection />
               {/* Add total and other summary information if needed */}
+              <div className="row" style={{direction:"rtl"}}>                
+                  <Button
+                    // style={{ backgroundColor: "#00192f" }}
+                    onClick={() => {{navigate("/payment")}{window.scrollTo({ top: 0, behavior: 'smooth' })}}}
+                    hideSomeInputs={true}
+                    variant="outlined"
+                  >
+                    <ArrowForward />
+                    Proceed To Book
+                  </Button>
+            </div>
             </Grid>
+
+            
             {/* Payment */}
-            <div className="col-md-12">
+            {/* <div className="col-md-12">
               <Typography variant="h5" align="center" gutterBottom>
                 Payment
               </Typography>
@@ -139,10 +155,10 @@ const Checkout = ({ ticket, index, updateQuantity }) => {
                   />
                 </div>
               </FormControl>
-            </div>
+            </div> */}
 
             {/* Buttons */}
-            <div className="row mt-1">
+            {/* <div className="row mt-1">
               <div className="col-xs-12">
                 <ButtonGroup fullWidth variant="contained">
                   <Button
@@ -173,7 +189,7 @@ const Checkout = ({ ticket, index, updateQuantity }) => {
                   />
                 </ButtonGroup>
               </div>
-            </div>
+            </div> */}
           </Container>
         </div>
       </div>
