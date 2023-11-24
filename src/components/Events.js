@@ -1,4 +1,4 @@
-import React, { useState} from "react";
+import React, { useState } from "react";
 import TopBar from "./TopBar";
 import Footer from "./Footer";
 import BreadCrumb from "./BreadCrumb";
@@ -17,7 +17,7 @@ const Events = () => {
     <div>
       <div className="main">
         <TopBar />
-        <BreadCrumb />
+        {/* <BreadCrumb /> */}
         <FilterEvent />
         <div>
           {/* <EventListAll /> */}

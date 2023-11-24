@@ -28,7 +28,7 @@ const EventCard = ({ event }) => {
 
   return (
     <div>
-      <div>
+      <div style={{margin:"7px"}}>
         <StyledPaper elevation={3}>
           <a href={link} style={{ textDecoration: "none", color: "inherit" }}>
             {/* <div className="lgx-event__tag">

@@ -1,206 +1,29 @@
-// import React, { useState } from "react";
-// import TopBar from "./TopBar";
-// import Footer from "./Footer";
-// import SeatingChart from "./SeatingChart";
-// import { Container, Grid, Typography, Button } from "@mui/material";
-// import { Link } from "react-router-dom";
-// const EventsDetail = () => {
-//   const [events, setEvents] = useState([]);
-
-//   // useEffect(() => {
-//   //   axios.get('/api/events')
-//   //     .then(response => setEvents(response.data))
-//   //     .catch(error => console.error(error));
-//   // }, []);
-
-//   return (
-//     <div>
-//       <div className="main">
-//         <TopBar />
-//         <div>
-//           {/* <SeatingChart /> */}
-//           {/* <EventListAll /> */}
-//           <Container>
-//         {/* About Section */}
-//         <section id="lgx-about" className="lgx-about">
-//           <div className="mt-40 mb-50 mt-mobile-0">
-//             <Grid container>
-//               {/* Date and Countdown */}
-//               <Grid item md={4} xs={12} className="visible-lg visible-md">
-//                 <div className="lgx-banner-info-area">
-//                 <div className="lgx-event__image">
-//                 <img
-//                 src={"./featured3.jpg"}
-//                 alt=""
-//                 className="event-image"
-//                 style={{ width: "100%", borderRadius: "8px", padding:"80px 0px 0px 0" }}
-//               />
-//                 </div>
-                
-//                 </div>
-//               </Grid>
-//               {/* Event Details */}
-//               <Grid item md={8} xs={12}>
-//                 <div className="lgx-about-content-area">
-//                   <Typography variant="h4" className="heading">
-//                     Pathaans Of Bollywood
-//                   </Typography>
-//                   <Typography variant="h6" style={{padding: "0px 215px"}} className="subheading">
-//                     <Link
-//                       to="events/pathaans-of-bollywood/Dhigna%20Dsp"
-//                       className="text-primary"
-//                     >
-//                       By Dhigna
-//                     </Link>
-//                     <span className="lgx-badge lgx-badge-primary"></span>
-//                   </Typography>
-//                   <Typography variant="h6" style={{padding: "0px 215px"}} className="subheading share-btns">
-//                     <span>
-//                       <strong>Share Event &nbsp;</strong>
-//                     </span>
-//                     {/* Add share buttons */}
-//                     <Button
-//                       component={Link}
-//                       to="https://www.facebook.com/sharer/sharer.php?u=https://events.dhigna.com/events/pathaans-of-bollywood"
-//                       className="btn btn-sm"
-//                     >
-//                       <i className="fab fa-facebook-square"></i>
-//                     </Button>
-//                     {/* Add other share buttons */}
-//                     {/* ... */}
-//                   </Typography>
-//                   <Button
-//                     component={Link}
-//                     to="/checkout"
-//                     variant="contained"
-//                     // style={{padding: "0px 215px"}}
-//                     className="lgx-btn lgx-btn-red mt-2"
-//                   >
-//                     <i className="fas fa-ticket-alt"></i> Get your tickets now
-//                   </Button>
-//                   <Typography
-//                     variant="body1"
-//                     className="lgx-about-content"
-//                     paragraph
-//                   >
-//                     {/* Add event description */}
-//                     "Get ready for an unforgettable evening that will transport
-//                     you to the heart of Bollywood's musical legacy! On January
-//                     12, 2024, starting at 6:00 PM, we are thrilled to invite you
-//                     to experience the 'Pathaans of Bollywood' - a grand
-//                     celebration marking '25 Years of Vishal-Shekhar' at the
-//                     iconic OVO Arena, Wembley, London. This is not just a
-//                     concert; it's a tribute to two maestros who have defined the
-//                     Bollywood music scene for a quarter of a century. Vishal
-//                     Dadlani and Shekhar Ravjiani, the magical duo behind
-//                     countless chart-toppers and soulful melodies, are all set to
-//                     mesmerize you with their musical journey. From the
-//                     foot-tapping beats of 'Bachna Ae Haseeno' to the soulful
-//                     tunes of 'Baby Ko Base Pasand Hai,' their music has touched
-//                     our hearts and left an indelible mark on Indian cinema. The
-//                     evening promises an electrifying atmosphere as the stage
-//                     lights up with their iconic hits, backed by a spectacular
-//                     ensemble of musicians. It's a once-in-a-lifetime opportunity
-//                     to experience the magic of Bollywood music live, in the
-//                     heart of London. Gather your friends and family, book your
-//                     tickets early, and be prepared for a night filled with
-//                     nostalgia, emotions, and sheer musical brilliance. Let's
-//                     come together to celebrate not just the music but the
-//                     indomitable spirit of Vishal-Shekhar, whose tunes have been
-//                     the soundtrack of our lives. This is more than a concert;
-//                     it's a musical journey you wouldn't want to miss.
-//                   </Typography>
-//                 </div>
-//               </Grid>
-//               {/* Location and Time */}
-//               <Grid container>
-//                 {/* Where Section */}
-//                 <Grid item xs={12} sm={5} md={5} offset-md={1}>
-//                   <div className="lgx-about-service">
-//                     <div className="lgx-single-service lgx-single-service-color">
-//                       <div className="text-area">
-//                         <span className="icon col-white">
-//                           <i
-//                             aria-hidden="true"
-//                             className="fas fa-map-marked-alt"
-//                           ></i>
-//                         </span>
-//                         <Typography variant="h5" className="title col-white">
-//                           Where
-//                         </Typography>
-//                         <Typography variant="body2">
-//                           <strong>OVO Arena Wembley - London</strong>
-//                           <br />
-//                           Arena Square, Engineers Way, Wembley Park HA9 0AA
-//                           <br />
-//                           Wembley, London, United Kingdom
-//                         </Typography>
-//                       </div>
-//                     </div>
-//                   </div>
-//                 </Grid>
-
-//                 {/* When Section */}
-//                 <Grid item xs={12} sm={5} md={5}>
-//                   <div className="lgx-about-service">
-//                     <div className="lgx-single-service lgx-single-service-color">
-//                       <div className="text-area">
-//                         <span className="icon col-white">
-//                           <i
-//                             aria-hidden="true"
-//                             className="fas fa-stopwatch"
-//                           ></i>
-//                         </span>
-//                         <Typography variant="h5" className="title col-white">
-//                           When
-//                         </Typography>
-//                         <Typography variant="body2">
-//                           12-Jan-2024 11:30 PM (IST)
-//                           <br />
-//                           Till
-//                           <br />
-//                           13-Jan-2024 03:30 AM (IST)
-//                         </Typography>
-//                       </div>
-//                     </div>
-//                   </div>
-//                 </Grid>
-//               </Grid>
-
-              
-
-              
-//             </Grid>
-//           </div>
-//         </section>
-//       </Container>
-//           {/* <EventList /> */}
-//           {/* Display events from the API */}
-//           {/* {events.map(event => ( */}
-//           {/* <div key={event.id}>
-//           <h2>{event.title}</h2>
-//           <p>{event.description}</p>
-//         </div> */}
-//           {/* ))} */}
-//         </div>
-//       </div>
-//       <Footer />
-//     </div>
-//   );
-// };
-
-// export default EventsDetail;
-
-
 import React, { useState } from "react";
-import { Container, Grid, Typography, Button, Paper, Tabs, Tab } from "@mui/material";
+import {
+  Container,
+  Grid,
+  Typography,
+  Button,
+  Paper,
+  Tabs,
+  Tab,
+} from "@mui/material";
 import { Link } from "react-router-dom";
 import TopBar from "./TopBar";
 import Footer from "./Footer";
-import { DateRange, FacebookOutlined, Instagram, MapSharp, MapsHomeWorkSharp, Watch, WhatsApp, WhatshotOutlined } from "@mui/icons-material";
+import {
+  DateRange,
+  FacebookOutlined,
+  Instagram,
+  MapSharp,
+  MapsHomeWorkSharp,
+  Watch,
+  WhatsApp,
+  WhatshotOutlined,
+} from "@mui/icons-material";
 
 const EventsDetail = () => {
-    const [value, setValue] = useState(0);
+  const [value, setValue] = useState(0);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -208,7 +31,13 @@ const EventsDetail = () => {
   return (
     <div>
       <TopBar />
-      <div style={{ backgroundColor: "#f5f5f5", minHeight: "100vh" , marginTop:"30px"}}>
+      <div
+        style={{
+          backgroundColor: "#f5f5f5",
+          minHeight: "100vh",
+          marginTop: "30px",
+        }}
+      >
         {/* TopBar component here if needed */}
         <Container>
           {/* About Section */}
@@ -279,132 +108,136 @@ const EventsDetail = () => {
                   </Button>
                 </div>
                 <Grid item xs={12} md={12}>
-              {/* Tabs and Content Section */}
-              <Tabs
-                value={value}
-                onChange={handleChange}
-                indicatorColor="primary"
-                textColor="primary"
-                centered
-              >
-                <Tab label="Event Date" />
-                <Tab label="Event Details" />
-                <Tab label="Location and Time" />
-              </Tabs>
-              <Paper elevation={3} style={{ padding: "20px" }}>
-                {value === 0 && (
-                  <div>
-                    {/* Date and Countdown Section */}
-                      <div className="text-area">
-                       
-                        <Typography variant="body2">
-                        <span className="icon col-white">
-                          <DateRange />
-                        </span>
-                          12-Jan-2024 
-                          <br />
-                          Till
-                          <br />
-                          13-Jan-2024
-                        </Typography>
-                      </div>
-                    {/* Add your Date and Countdown content here */}
-                  </div>
-                )}
-                {value === 1 && (
-                  <div>
-                    {/* Event Details Section */}
-                    <Typography variant="h4" className="heading">
-                      Event Details
-                    </Typography>
-                    <Grid item md={8} xs={12}>
-                <div className="lgx-about-content-area">
-                  <Typography
-                    variant="body1"
-                    className="lgx-about-content"
-                    paragraph
+                  {/* Tabs and Content Section */}
+                  <Tabs
+                    value={value}
+                    onChange={handleChange}
+                    indicatorColor="primary"
+                    textColor="primary"
+                    centered
                   >
-                    {/* Add event description */}
-                    "Get ready for an unforgettable evening that will transport
-                    you to the heart of Bollywood's musical legacy! On January
-                    12, 2024, starting at 6:00 PM, we are thrilled to invite you
-                    to experience the 'Pathaans of Bollywood' - a grand
-                    celebration marking '25 Years of Vishal-Shekhar' at the
-                    iconic OVO Arena, Wembley, London. This is not just a
-                    concert; it's a tribute to two maestros who have defined the
-                    Bollywood music scene for a quarter of a century. Vishal
-                    Dadlani and Shekhar Ravjiani, the magical duo behind
-                    countless chart-toppers and soulful melodies, are all set to
-                    mesmerize you with their musical journey. From the
-                    foot-tapping beats of 'Bachna Ae Haseeno' to the soulful
-                    tunes of 'Baby Ko Base Pasand Hai,' their music has touched
-                    our hearts and left an indelible mark on Indian cinema. The
-                    evening promises an electrifying atmosphere as the stage
-                    lights up with their iconic hits, backed by a spectacular
-                    ensemble of musicians. It's a once-in-a-lifetime opportunity
-                    to experience the magic of Bollywood music live, in the
-                    heart of London. Gather your friends and family, book your
-                    tickets early, and be prepared for a night filled with
-                    nostalgia, emotions, and sheer musical brilliance. Let's
-                    come together to celebrate not just the music but the
-                    indomitable spirit of Vishal-Shekhar, whose tunes have been
-                    the soundtrack of our lives. This is more than a concert;
-                    it's a musical journey you wouldn't want to miss.
-                  </Typography>
-                </div>
-              </Grid>
-                    {/* Add your Event Details content here */}
-                  </div>
-                )}
-                {value === 2 && (
-                  <div>
-                    {/* Location and Time Section */}
-                    {/* Add your Location and Time content here */}
-                    <Grid container>
-                {/* Where Section */}
-                <Grid item xs={12} sm={5} md={5} offset-md={1}>
-                      <div className="text-area">
-                        <span className="icon col-white">
-                          <MapSharp />
-                        </span>
-                        <Typography variant="body2">
-                          <strong>OVO Arena Wembley - London</strong>
-                          <br />
-                          Arena Square, Engineers Way, Wembley Park HA9 0AA
-                          <br />
-                          Wembley, London, United Kingdom
-                        </Typography>
+                    <Tab label="Event Date" />
+                    <Tab label="Event Details" />
+                    <Tab label="Location and Time" />
+                  </Tabs>
+                  <Paper elevation={3} style={{ padding: "20px" }}>
+                    {value === 0 && (
+                      <div>
+                        {/* Date and Countdown Section */}
+                        <div className="text-area">
+                          <Typography variant="body2">
+                            <span className="icon col-white">
+                              <DateRange />
+                            </span>
+                            12-Jan-2024
+                            <br />
+                            Till
+                            <br />
+                            13-Jan-2024
+                          </Typography>
+                        </div>
+                        {/* Add your Date and Countdown content here */}
                       </div>
-                </Grid>
+                    )}
+                    {value === 1 && (
+                      <div>
+                        {/* Event Details Section */}
+                        <Typography variant="h4" className="heading">
+                          Event Details
+                        </Typography>
+                        <Grid item md={8} xs={12}>
+                          <div className="lgx-about-content-area">
+                            <Typography
+                              variant="body1"
+                              className="lgx-about-content"
+                              paragraph
+                            >
+                              {/* Add event description */}
+                              "Get ready for an unforgettable evening that will
+                              transport you to the heart of Bollywood's musical
+                              legacy! On January 12, 2024, starting at 6:00 PM,
+                              we are thrilled to invite you to experience the
+                              'Pathaans of Bollywood' - a grand celebration
+                              marking '25 Years of Vishal-Shekhar' at the iconic
+                              OVO Arena, Wembley, London. This is not just a
+                              concert; it's a tribute to two maestros who have
+                              defined the Bollywood music scene for a quarter of
+                              a century. Vishal Dadlani and Shekhar Ravjiani,
+                              the magical duo behind countless chart-toppers and
+                              soulful melodies, are all set to mesmerize you
+                              with their musical journey. From the foot-tapping
+                              beats of 'Bachna Ae Haseeno' to the soulful tunes
+                              of 'Baby Ko Base Pasand Hai,' their music has
+                              touched our hearts and left an indelible mark on
+                              Indian cinema. The evening promises an
+                              electrifying atmosphere as the stage lights up
+                              with their iconic hits, backed by a spectacular
+                              ensemble of musicians. It's a once-in-a-lifetime
+                              opportunity to experience the magic of Bollywood
+                              music live, in the heart of London. Gather your
+                              friends and family, book your tickets early, and
+                              be prepared for a night filled with nostalgia,
+                              emotions, and sheer musical brilliance. Let's come
+                              together to celebrate not just the music but the
+                              indomitable spirit of Vishal-Shekhar, whose tunes
+                              have been the soundtrack of our lives. This is
+                              more than a concert; it's a musical journey you
+                              wouldn't want to miss.
+                            </Typography>
+                          </div>
+                        </Grid>
+                        {/* Add your Event Details content here */}
+                      </div>
+                    )}
+                    {value === 2 && (
+                      <div>
+                        {/* Location and Time Section */}
+                        {/* Add your Location and Time content here */}
+                        <Grid container>
+                          {/* Where Section */}
+                          <Grid item xs={12} sm={5} md={5} offset-md={1}>
+                            <div className="text-area">
+                              <span className="icon col-white">
+                                <MapSharp />
+                              </span>
+                              <Typography variant="body2">
+                                <strong>OVO Arena Wembley - London</strong>
+                                <br />
+                                Arena Square, Engineers Way, Wembley Park HA9
+                                0AA
+                                <br />
+                                Wembley, London, United Kingdom
+                              </Typography>
+                            </div>
+                          </Grid>
 
-                {/* When Section */}
-                <Grid item xs={12} sm={5} md={5} offset-md={1}>
-                      <div className="text-area">
-                        <Typography variant="body2">
-                        <span className="icon col-black">
-                        <Watch />
-                        </span>
-                           11:30 PM (IST)
-                          <br />
-                          Till
-                          <br />
-                           03:30 AM (IST)
-                        </Typography>
+                          {/* When Section */}
+                          <Grid item xs={12} sm={5} md={5} offset-md={1}>
+                            <div className="text-area">
+                              <Typography variant="body2">
+                                <span className="icon col-black">
+                                  <Watch />
+                                </span>
+                                11:30 PM (IST)
+                                <br />
+                                Till
+                                <br />
+                                03:30 AM (IST)
+                              </Typography>
+                            </div>
+                          </Grid>
+                        </Grid>
                       </div>
+                    )}
+                  </Paper>
                 </Grid>
               </Grid>
-                  </div>
-                )}
-              </Paper>
-            </Grid>
-              </Grid>
-              
             </Grid>
 
             {/* Location and Time */}
             {/* <Grid container style={{ marginTop: "30px" }}> */}
-              {/* Where Section */}
-              {/* <Grid item xs={12} sm={6}>
+            {/* Where Section */}
+            {/* <Grid item xs={12} sm={6}>
                 <Paper elevation={3} style={{ padding: "20px" }}>
                   <Typography variant="h5" style={{ marginBottom: "10px" }}>
                     Where
@@ -419,8 +252,8 @@ const EventsDetail = () => {
                 </Paper>
               </Grid> */}
 
-              {/* When Section */}
-              {/* <Grid item xs={12} sm={6}>
+            {/* When Section */}
+            {/* <Grid item xs={12} sm={6}>
                 <Paper elevation={3} style={{ padding: "20px" }}>
                   <Typography variant="h5" style={{ marginBottom: "10px" }}>
                     When
@@ -447,4 +280,3 @@ const EventsDetail = () => {
 };
 
 export default EventsDetail;
-

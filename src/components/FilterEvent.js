@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   TextField,
   Select,
@@ -7,12 +7,18 @@ import {
   InputLabel,
   Grid,
   Container,
+  Pagination,
+  Stack,
+  Box,
+  Typography,
+  Card,
+  Paper,
 } from "@mui/material";
 import EventCard from "./EventCard";
 
 const FilterEvent = () => {
   const events = [
-    {
+        {
       link: "/eventsdetail",
       tag: "Upcoming",
       imageSrc: "/featured1.jpg",
@@ -138,108 +144,118 @@ const FilterEvent = () => {
       price2: "Red: 90.00 GBP",
       category: "",
     },
+    {
+      link: "/eventsdetail",
+      tag: "Upcoming",
+      imageSrc: "/featured3.jpg",
+      date: "12-Jan-2024",
+      time: "11:30 PM - 03:30 AM (IST)",
+      location: "Wembley",
+      title: "Pathaans Of Bollywood",
+      subtitle1: "Live Music",
+      subtitle2: "@OVO Arena Wembley - London",
+      price1: "VIP: 120.00 GBP",
+      price2: "Red: 90.00 GBP",
+      category: "",
+    },
+  ]; // Your events array
 
-    // Add more events as needed
-  ];
+  const [searchQuery, setSearchQuery] = useState('');
+  const [events1, setEvents1] = useState(/* Your events array */);
+
+  const handleSearchChange = (event) => {
+    setSearchQuery(event.target.value);
+  };
+
+  const filteredEvents = events.filter((event) => {
+    const searchFields = [
+      event.title,
+      event.subtitle1,
+      event.subtitle2,
+      event.location,
+    ];
+    const lowerCaseQuery = searchQuery.toLowerCase();
+    return searchFields.some((field) =>
+      field.toLowerCase().includes(lowerCaseQuery)
+    );
+  });
+
+  // Pagination
+  const itemsPerPage = 6;
+  const [page, setPage] = React.useState(1);
+  const totalPages = Math.ceil(events.length / itemsPerPage);
+
+  const handleChangePage = (event, value) => {
+    setPage(value);
+  };
+
+  const displayedEvents = filteredEvents.slice(
+    (page - 1) * itemsPerPage,
+    page * itemsPerPage
+  );
+
   return (
-    <Container style={{ margin: "0px" }}>
-      <Grid
-        container
-        spacing={2}
-        style={{ marginTop: "15px", marginRight: "50px" }}
-      >
-        <Grid item xs={12} lg={3} className="mb-50 pl-30">
-          <div className="form-group">
+    <Container >
+      <Grid container spacing={2} mt={8}>
+      <Grid item xs={12} lg={3}>
+         <Paper elevation={3} style={{ padding: "20px", marginTop:"35px" }}>
+         <Stack spacing={2}>
             <TextField
               label="Search Event"
               placeholder="Type Event Name/Venue/City/State"
               fullWidth
               variant="outlined"
+              value={searchQuery}
+              onChange={handleSearchChange}
             />
-          </div>
-          <div className="form-group">
             <InputLabel id="category-label">Category</InputLabel>
-            <Select
-              labelId="category-label"
-              label="Category"
-              name="category"
-              fullWidth
-              variant="outlined"
-            >
+            <Select labelId="category-label" label="Category" name="category" fullWidth variant="outlined">
               <MenuItem value="All">All</MenuItem>
-              <MenuItem value="Upcoming Events">Upcoming Events</MenuItem>
-              <MenuItem value="Entertainment">Entertainment</MenuItem>
-              <MenuItem value="Music">Music</MenuItem>
-              <MenuItem value="Dances">Dances</MenuItem>
+              {/* Add other categories */}
             </Select>
-          </div>
-          <div className="form-group">
-            <TextField
-              label="Date"
-              placeholder="Date Filter"
-              fullWidth
-              variant="outlined"
-              type="text"
-              autoComplete="off"
-            />
-          </div>
-          <div className="form-group">
+            <TextField label="Date" placeholder="Date Filter" fullWidth variant="outlined" type="text" autoComplete="off" />
             <InputLabel id="price-label">Price</InputLabel>
-            <Select
-              labelId="price-label"
-              label="Price"
-              name="price"
-              fullWidth
-              variant="outlined"
-            >
+            <Select labelId="price-label" label="Price" name="price" fullWidth variant="outlined">
               <MenuItem value="">Any Price</MenuItem>
               <MenuItem value="free">Free</MenuItem>
               <MenuItem value="paid">Paid</MenuItem>
             </Select>
-          </div>
-          <div className="form-group">
             <InputLabel id="country-label">Country</InputLabel>
-            <Select
-              labelId="country-label"
-              label="Country"
-              name="country"
-              fullWidth
-              variant="outlined"
-            >
+            <Select labelId="country-label" label="Country" name="country" fullWidth variant="outlined">
               <MenuItem value="All">All</MenuItem>
-              <MenuItem value="United Kingdom">United Kingdom</MenuItem>
-              <MenuItem value="India">India</MenuItem>
+              {/* Add other countries */}
             </Select>
-          </div>
-          <div className="form-group">
             <InputLabel id="city-label">City</InputLabel>
-            <Select
-              labelId="city-label"
-              label="City"
-              name="city"
-              disabled
-              fullWidth
-              variant="outlined"
-            >
+            <Select labelId="city-label" label="City" name="city" disabled fullWidth variant="outlined">
               <MenuItem value="All">All</MenuItem>
-              <MenuItem value="London">London, London</MenuItem>
-              {/* Add other cities as needed */}
+              {/* Add other cities */}
             </Select>
-          </div>
-          <div className="form-group">
             <Button type="button" variant="contained" color="primary" fullWidth>
               <i className="fas fa-redo"></i> Reset Filters
             </Button>
-          </div>
+          </Stack>
+         </Paper>
+          
         </Grid>
         <Grid item xs={12} lg={9}>
+          <Typography variant="h4" gutterBottom>
+            Events
+          </Typography>
           <Grid container spacing={3}>
-            {events.map((event, index) => (
+            {displayedEvents.map((event, index) => (
               <Grid key={index} item xs={12} sm={6} lg={4}>
                 <EventCard event={event} />
               </Grid>
             ))}
           </Grid>
+          <Box mt={3} mb={4}>
+            <Pagination
+              count={totalPages}
+              page={page}
+              onChange={handleChangePage}
+              shape="rounded"
+            />
+          </Box>
         </Grid>
       </Grid>
     </Container>
@@ -247,3 +263,4 @@ const FilterEvent = () => {
 };
 
 export default FilterEvent;
+

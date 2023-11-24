@@ -173,18 +173,20 @@ const Login = () => {
                   xs={12}
                   style={{ marginBottom: "15px", textAlign: "left" }}
                 >
-                  <p >Didn't have an account?<Button
-                        variant="text"
-                        style={{
-                          color: "#002355",
-                          fontSize: "12px",
-                          textTransform: "capitalize",
-                        }}
-                        onClick={() => navigate("/register")}
-                      >
-                        Signup
-                      </Button></p>
-                  
+                  <p>
+                    Didn't have an account?
+                    <Button
+                      variant="text"
+                      style={{
+                        color: "#002355",
+                        fontSize: "12px",
+                        textTransform: "capitalize",
+                      }}
+                      onClick={() => navigate("/register")}
+                    >
+                      Signup
+                    </Button>
+                  </p>
                 </Grid>
                 <Grid>
                   {/* {auth && auth.status && auth.status.status == 200 ? <SuccessAlert msg={auth.status ? auth.status.data.message : ''} /> : ''}

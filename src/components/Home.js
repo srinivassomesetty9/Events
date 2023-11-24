@@ -59,7 +59,7 @@ const Home = () => {
           <>
             <ImageScroll images={images} />
             {/* <img src="./music-104.gif" className="background-image" /> */}
-            {/* <div class="lgx-container">
+            <div class="lgx-container">
                 <div class="lgx-hover-link">
                   <div class="lgx-vertical">
                     <div class="lgx-banner-info">
@@ -81,7 +81,7 @@ const Home = () => {
                     </div>
                   </div>
                 </div>
-              </div> */}
+              </div>
           </>
           {/* </div> */}
         </div>
