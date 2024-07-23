@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 import {
   Container,
   Typography,
@@ -19,7 +19,8 @@ import {
   MenuItem,
   Grid,
   TableSortLabel,
-} from '@mui/material';
+  Chip,
+} from "@mui/material";
 
 const Reports = () => {
   const [loading, setLoading] = useState(true);
@@ -52,44 +53,61 @@ const Reports = () => {
 
   const fetchReports = async () => {
     try {
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem("token");
 
-      const response = await axios.get(`https://api.jinnhire.in/jinnhire/data/manager_reports/recruiter_performance/`, {
-        headers: { Authorization: `Token ${token}` },
-      });
+      const response = await axios.get(
+        `https://api.jinnhire.in/jinnhire/data/manager_reports/recruiter_performance/`,
+        {
+          headers: { Authorization: `Token ${token}` },
+        }
+      );
 
       setReports(response.data);
       setLoading(false);
     } catch (error) {
-      setError('Failed to fetch reports');
+      setError("Failed to fetch reports");
       setLoading(false);
     }
   };
 
   const formatRecruiterName = (email) => {
-    const name = email.split('@')[0];
-    return name.replace('.', ' ');
+    const name = email.split("@")[0];
+    return name.replace(".", " ");
   };
 
   const filteredReports = selectedRecruiter
     ? reports.filter((report) => report.recruiter_name === selectedRecruiter)
     : reports;
 
-  const totalProcessedResumes = filteredReports.reduce((total, report) => total + report.total_processed, 0);
-  const totalFailed = filteredReports.reduce((total, report) => total + report.processing_failed, 0);
+  const totalProcessedResumes = filteredReports.reduce(
+    (total, report) => total + report.total_processed,
+    0
+  );
+  const totalFailed = filteredReports.reduce(
+    (total, report) => total + report.processing_failed,
+    0
+  );
   const totalProcessed = totalProcessedResumes + totalFailed;
 
-  const recruiterNames = [...new Set(reports.map((report) => report.recruiter_name))];
+  const recruiterNames = [
+    ...new Set(reports.map((report) => report.recruiter_name)),
+  ];
 
-  const flattenedReports = filteredReports.flatMap((report) => 
-    report.processed_resumes.map((resume) => ({
-      recruiter_name: report.recruiter_name,
-      requirement_id: resume.requirement_id,
-      candidate_name: resume.candidate_name,
-    }))
+  const flattenedReports = filteredReports.flatMap((report) =>
+    report.processed_resumes
+      .filter((resume) => resume.resume_state === "processed") // Only include processed resumes
+      .map((resume) => ({
+        recruiter_name: report.recruiter_name,
+        requirement_id: resume.requirement_id,
+        candidate_name: resume.candidate_name,
+        resume_state: resume.resume_state, // Include resume_state
+      }))
   );
 
-  const displayReports = flattenedReports.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
+  const displayReports = flattenedReports.slice(
+    page * rowsPerPage,
+    page * rowsPerPage + rowsPerPage
+  );
 
   return (
     <Container>
@@ -106,7 +124,9 @@ const Reports = () => {
               >
                 <MenuItem value="">All Recruiters</MenuItem>
                 {recruiterNames.map((name, index) => (
-                  <MenuItem key={index} value={name}>{formatRecruiterName(name)}</MenuItem>
+                  <MenuItem key={index} value={name}>
+                    {formatRecruiterName(name)}
+                  </MenuItem>
                 ))}
               </Select>
             </FormControl>
@@ -122,7 +142,7 @@ const Reports = () => {
                 <TableCell>
                   <TableSortLabel>SNO</TableSortLabel>
                 </TableCell>
-                {selectedRecruiter === '' && (
+                {selectedRecruiter === "" && (
                   <TableCell>
                     <TableSortLabel>Recruiter Name</TableSortLabel>
                   </TableCell>
@@ -133,18 +153,21 @@ const Reports = () => {
                 <TableCell>
                   <TableSortLabel>Candidate Name</TableSortLabel>
                 </TableCell>
+                <TableCell>
+                  <TableSortLabel>Status</TableSortLabel>
+                </TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
               {loading ? (
                 <TableRow>
-                  <TableCell colSpan={4} align="center">
+                  <TableCell colSpan={5} align="center">
                     <CircularProgress />
                   </TableCell>
                 </TableRow>
               ) : error ? (
                 <TableRow>
-                  <TableCell colSpan={4} align="center">
+                  <TableCell colSpan={5} align="center">
                     <Typography variant="h6" color="error">
                       {error}
                     </Typography>
@@ -152,7 +175,7 @@ const Reports = () => {
                 </TableRow>
               ) : displayReports.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={4} align="center">
+                  <TableCell colSpan={5} align="center">
                     <Typography variant="h6" color="textSecondary">
                       No data available
                     </Typography>
@@ -162,11 +185,16 @@ const Reports = () => {
                 displayReports.map((row, index) => (
                   <TableRow key={index}>
                     <TableCell>{page * rowsPerPage + index + 1}</TableCell>
-                    {selectedRecruiter === '' && (
-                      <TableCell>{formatRecruiterName(row.recruiter_name)}</TableCell>
+                    {selectedRecruiter === "" && (
+                      <TableCell>
+                        {formatRecruiterName(row.recruiter_name)}
+                      </TableCell>
                     )}
                     <TableCell>{row.requirement_id}</TableCell>
                     <TableCell>{row.candidate_name}</TableCell>
+                    <TableCell>
+                      <Chip color="success" label={"Submitted"} />
+                    </TableCell>
                   </TableRow>
                 ))
               )}
@@ -177,9 +205,7 @@ const Reports = () => {
           <Typography variant="h6">
             Submitted Resumes: {totalProcessedResumes}
           </Typography>
-          <Typography variant="h6">
-            Process Failed: {totalFailed}
-          </Typography>
+          <Typography variant="h6">Process Failed: {totalFailed}</Typography>
           <Typography variant="h6">
             Total Processed: {totalProcessed}
           </Typography>

@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from "react";
 import Box from "@mui/material/Box";
-import TopBar from "./TopBar";
-import { Container, Typography, TextField, Button, Alert, Snackbar } from "@mui/material";
-import BreadCrumb from "./BreadCrumb";
+import { Typography, TextField, Button, Alert, Snackbar, Select, MenuItem, FormControl, InputLabel } from "@mui/material";
 
 const GlobalSettings = () => {
   const [globalSurplusCount, setGlobalSurplusCount] = useState(2);
+  const [assignmentStrategy, setAssignmentStrategy] = useState("ROUNDROBIN_OPTED_USERS");
   const [show, setShow] = useState(false);
   const [message, setMessage] = useState("");
   const [severity, setSeverity] = useState("success");
@@ -29,6 +28,7 @@ const GlobalSettings = () => {
         if (response.ok) {
           const data = await response.json();
           setGlobalSurplusCount(data.global_surplus_count_of_resumes);
+          setAssignmentStrategy(data.resume_assignment_strategy);
         } else {
           throw new Error("Failed to fetch global settings");
         }
@@ -58,6 +58,8 @@ const GlobalSettings = () => {
           },
           body: JSON.stringify({
             global_surplus_count_of_resumes: globalSurplusCount,
+            global_assignment_type: assignmentStrategy,  // Using the combined select value
+            resume_assignment_strategy: assignmentStrategy,  // Using the combined select value
           }),
         }
       );
@@ -66,7 +68,7 @@ const GlobalSettings = () => {
         const data = await response.json();
         setShow(true);
         setSeverity("success");
-        setMessage("Global surplus count of resumes updated successfully");
+        setMessage("Global settings updated successfully");
       } else {
         throw new Error("Failed to update global settings");
       }
@@ -74,11 +76,7 @@ const GlobalSettings = () => {
       console.error("Error:", error);
       setShow(true);
       setSeverity("error");
-      if (error.response.data.message) {
-        setMessage(error.response.data.message);
-      } else {
-        setMessage("Error updating global surplus count of resumes. Please try again.");
-      }
+      setMessage("Error updating global settings. Please try again.");
     }
   };
 
@@ -110,18 +108,33 @@ const GlobalSettings = () => {
           onChange={handleSurplusCountChange}
           width={50}
           variant="outlined"
-          sx={{mr:2}}
+          sx={{ mr: 2 }}
         />
-        <Button
+        <Typography variant="body1" gutterBottom>
+          Assignment Strategy
+        </Typography>
+        <FormControl variant="outlined" sx={{ mr: 2, minWidth: 200 }}>
+          <Select
+            labelId="assignment-strategy-label"
+            id="assignmentStrategy"
+            value={assignmentStrategy}
+            onChange={(e) => setAssignmentStrategy(e.target.value)}
+            // label="Assignment Strategy"
+          >
+            <MenuItem value="roundrobin_global_active_byload">Round Robin Global Active by Load</MenuItem>
+            <MenuItem value="ROUNDROBIN_OPTED_USERS">Round Robin Opted Users</MenuItem>
+          </Select>
+        </FormControl>
+      </Box>
+      <Button
           id="updateSurplusCountButton"
           variant="contained"
           color="primary"
           onClick={handleUpdateSurplusCount}
-          sx={{ mt: 2,backgroundColor: "rgb(31 91 139)" }}
+          sx={{ mt: 2, backgroundColor: "rgb(31 91 139)" }}
         >
-          Update Surplus Count
+          Update Global Settings
         </Button>
-      </Box>
     </Box>
   );
 };

@@ -25,6 +25,7 @@ import {
   DialogActions,
   Snackbar,
   Alert,
+  Chip,
 } from "@mui/material";
 import {
   Visibility,
@@ -80,7 +81,7 @@ export default function FileManagement() {
   } = location.state || {};
 
   const [uploadedResumes, setUploadedResumes] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [selectedResumes, setSelectedResumes] = useState([]);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
@@ -114,7 +115,7 @@ export default function FileManagement() {
     num_resumes_submitted: num_resumes_submitted || 0,
     remarks_for_processing: remarks_for_processing || "",
     remarks_for_sourcing: remarks_for_sourcing || "",
-  })
+  });
   const [filesToUpload, setFilesToUpload] = useState([]);
   const [show, setShow] = useState(false);
   const [message, setMessage] = useState("");
@@ -122,6 +123,7 @@ export default function FileManagement() {
   const [role, setRole] = useState("");
   const [modalOpen, setModalOpen] = useState(false);
   const [isValidationDone, setIsValidationDone] = useState(false);
+  const [failedUploads, setFailedUploads] = useState([]);
 
   const handleOpenModal = () => {
     setModalOpen(true);
@@ -137,17 +139,17 @@ export default function FileManagement() {
     const getrole = JSON.parse(userData);
     // console.log(getrole.role,"ROLE")
     setRole(getrole.role);
+    fetchFailedUploads();
   }, []);
 
   const userData = localStorage.getItem("user");
   const parsedUserData = JSON.parse(userData);
 
   const fetchUploadedResumes = async () => {
-    setLoading(true);
     try {
       const token = localStorage.getItem("token");
       const response = await axios.get(
-        `https://api.jinnhire.in/jinnhire/data/requirements/${requirement_id}/resumes/?state=uploaded`,
+        `https://api.jinnhire.in/jinnhire/data/requirements/${requirement_id}/resumes/?state=parse_failed`,
         {
           headers: {
             Authorization: `Token ${token}`,
@@ -157,6 +159,25 @@ export default function FileManagement() {
       setUploadedResumes(response.data);
     } catch (error) {
       console.error("Error fetching uploaded resumes", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const fetchFailedUploads = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      const response = await axios.get(
+        `https://api.jinnhire.in/jinnhire/data/failed-uploads`,
+        {
+          headers: {
+            Authorization: `Token ${token}`,
+          },
+        }
+      );
+      setFailedUploads(response.data);
+    } catch (error) {
+      console.error("Error fetching failed uploads", error);
     } finally {
       setLoading(false);
     }
@@ -180,7 +201,7 @@ export default function FileManagement() {
 
     try {
       const token = localStorage.getItem("token");
-      await axios.post(
+      const data = await axios.post(
         "https://api.jinnhire.in/jinnhire/data/resumes/",
         formData,
         {
@@ -192,62 +213,69 @@ export default function FileManagement() {
       );
       setShow(true);
       setSeverity("success");
-      setMessage("File uploaded successfully!");
+
+      // Check the status code of the response
+      if (data.status === 201) {
+        // Success status code
+        setSeverity("success");
+        const successMessage =
+          data.data[0]?.message || "File uploaded successfully!";
+        setMessage(successMessage);
+      } else if (data.status === 207) {
+        // Multi-Status code, handle the specific error
+        const errorData = data.data[0];
+        if (errorData.error.includes("not in a processable state")) {
+          setSeverity("error");
+          setMessage(
+            `Resume with phone number ${errorData.existing_number} exists but is not in a processable state.`
+          );
+        } else {
+          setSeverity("error");
+          setMessage(errorData.error);
+        }
+      } else {
+        // Other status codes
+        setSeverity("error");
+        setMessage("Unexpected response from the server.");
+      }
       fetchUploadedResumes();
     } catch (error) {
       console.error("Error uploading file", error.response);
       setShow(true);
-      setSeverity("error");
+      const errorMessage1 = error.response.data.error;
       if (error.response.data.message) {
-        setMessage(error.response.data.message);
+        const errorMessage = error.response.data.message;
+        if (errorMessage.includes("already exists")) {
+          // Extract common words to show the success message
+          const candidateInfo = errorMessage.match(
+            /resume for (.*) with this phone number (.*) already exists/
+          );
+          if (candidateInfo && candidateInfo.length > 2) {
+            const candidateName = candidateInfo[1];
+            const phoneNumber = candidateInfo[2];
+            setMessage(
+              `Candidate ${candidateName} with phone number ${phoneNumber} already exists. The state will be updated accordingly.`
+            );
+          } else {
+            setMessage(
+              "Candidate already exists. The state will be updated accordingly."
+            );
+          }
+          setSeverity("warning"); // Set severity to warning for candidate already exists
+        } else {
+          setSeverity("error");
+          setMessage("Error uploading file. Please try again.");
+        }
+      } else if (errorMessage1.includes("not in a processable state")) {
+        const existingNumber = error.response.data.existing_number;
+        setSeverity("error");
+        setMessage(
+          `Resume with phone number ${existingNumber} exists but is not in a processable state.`
+        );
       } else {
+        setSeverity("error");
         setMessage("Error uploading file. Please try again.");
       }
-    }
-  };
-
-  const handleUploadSubmit = async (files) => {
-    if (filesToUpload.length === 0) {
-      // alert("Please select files to upload.");
-      setShow(true);
-      setMessage("Please select files to upload.");
-      setSeverity("warning");
-      return;
-    }
-
-    const formData = new FormData();
-    for (let i = 0; i < filesToUpload.length; i++) {
-      formData.append("file", filesToUpload[i]);
-    }
-    formData.append("requirement_id", requirement_id);
-
-    setLoading(true);
-
-    try {
-      const token = localStorage.getItem("token");
-      await axios.post(
-        "https://api.jinnhire.in/jinnhire/data/resumes/",
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-            Authorization: `Token ${token}`,
-          },
-        }
-      );
-      // alert("Files uploaded successfully!");
-      setShow(true);
-      setMessage("Files uploaded successfully!");
-      setSeverity("success");
-      fetchUploadedResumes();
-    } catch (error) {
-      console.error("Error uploading files", error);
-      // alert("Error uploading files. Please try again.");
-      setShow(true);
-      setMessage("Error uploading files. Please try again.");
-      setSeverity("error");
-    } finally {
-      setFilesToUpload([]);
     }
   };
 
@@ -318,23 +346,23 @@ export default function FileManagement() {
       setSeverity("warning");
       return;
     }
-  
+
     const selectedResumeIds = selectedResumes.map((resume) =>
       parseInt(resume.split("-")[0])
     );
     setLoading(true);
-  
+
     const resumeDataArray = selectedResumeIds.map((index) => {
       const resume = uploadedResumes[index];
       return resume;
     });
-  
+
     const sessionId =
       "session_" +
       new Date().getTime() +
       "_" +
       Math.random().toString(36).substring(2, 15);
-  
+
     const token = localStorage.getItem("token");
     setLoading(true);
     const jdResponse = await axios.get(
@@ -346,16 +374,16 @@ export default function FileManagement() {
       }
     );
     const jdData = jdResponse.data.mandatory_skills;
-  
+
     for (const resumeData of resumeDataArray) {
       try {
         setLoading(true);
         const resumeId = resumeData.resume_id;
         const resumeLink = resumeData.file_link;
-  
+
         let resumeText = "";
         let resumeLinkString = "";
-  
+
         if (typeof resumeLink === "string") {
           resumeLinkString = resumeLink;
         } else if (typeof resumeData === "object" && resumeData.file_link) {
@@ -364,7 +392,7 @@ export default function FileManagement() {
           console.error("Unsupported document format:", resumeLink);
           continue;
         }
-  
+
         if (resumeLinkString.endsWith(".pdf")) {
           try {
             const pdfResponse = await fetch(resumeLinkString);
@@ -396,9 +424,9 @@ export default function FileManagement() {
           console.error("Unsupported document format:", resumeLinkString);
           continue;
         }
-  
+
         console.log(resumeText, "HERE resumeText");
-  
+
         await sendResumeText(sessionId, resumeText, jdData, resumeId);
         fetchUploadedResumes();
       } catch (error) {
@@ -407,7 +435,6 @@ export default function FileManagement() {
       }
     }
   };
-  
 
   const extractTextFromPDF = async (pdfBlob) => {
     const reader = new FileReader();
@@ -465,21 +492,25 @@ export default function FileManagement() {
   };
 
   const extractTextFromDOC = async (docBlob) => {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.readAsArrayBuffer(docBlob);
-      reader.onloadend = async () => {
-        try {
-          const arrayBuffer = reader.result;
-          const options = { convertImage: mammoth.images.inline() };
-          const result = await mammoth.extractRawText({ arrayBuffer }, options);
-          resolve(result.value);
-        } catch (error) {
-          reject(`Error extracting text from DOC: ${error.message}`);
+    const formData = new FormData();
+    formData.append("file", docBlob);
+
+    try {
+      const token = localStorage.getItem("token");
+      const response = await axios.post(
+        "https://api.jinnhire.in/jinnhire/data/resumes/extract-doc/",
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            Authorization: `Token ${token}`,
+          },
         }
-      };
-      reader.onerror = () => reject("Error reading DOC file.");
-    });
+      );
+      return response.data.text;
+    } catch (error) {
+      throw new Error("Error extracting text from DOC:", error);
+    }
   };
 
   const sendResumeText = async (sessionId, resumeText, jdData, resumeId) => {
@@ -575,10 +606,74 @@ export default function FileManagement() {
     };
   };
 
-  const handleDelete = (index) => {
-    const updatedResumes = [...uploadedResumes];
-    updatedResumes.splice(index, 1);
-    setUploadedResumes(updatedResumes);
+  const handleDelete = async (resumeId, phoneNumber) => {
+    try {
+      const token = localStorage.getItem("token");
+      await axios.delete(
+        `https://api.jinnhire.in/jinnhire/data/resumes/${resumeId}/`,
+        {
+          headers: {
+            Authorization: `Token ${token}`,
+          },
+        }
+      );
+
+      // Assuming success handling
+      console.log(`Resume deleted successfully.`);
+
+      // Update state or display a success message
+      setShow(true);
+      setMessage(`Resume deleted successfully.`);
+      setSeverity("success");
+
+      // Optionally update your UI or state to reflect the deletion
+      fetchUploadedResumes();
+    } catch (error) {
+      console.error("Error deleting resume", error);
+
+      // Handle error response
+      setShow(true);
+      setSeverity("error");
+
+      if (error.response && error.response.status === 404) {
+        setMessage(`Resume not found.`);
+      } else {
+        setMessage("Error deleting resume. Please try again.");
+      }
+
+      // Optionally update your UI or state to reflect the error
+    }
+  };
+
+  const handleDeleteUploadFailed = async (id, filename) => {
+    try {
+      const token = localStorage.getItem("token");
+      await axios.delete(
+        `https://api.jinnhire.in/jinnhire/data/failed-uploads/${id}`,
+        {
+          headers: {
+            Authorization: `Token ${token}`,
+          },
+        }
+      );
+
+      // Update state for success message
+      setShow(true);
+      setMessage(`Resume ${filename} deleted successfully.`);
+      setSeverity("success");
+
+      // Refresh the list of failed uploads
+      fetchFailedUploads();
+    } catch (error) {
+      console.error("Error deleting resume ${filename}", error);
+
+      // Update state for error message
+      setShow(true);
+      setMessage(`Error deleting resume ${filename}. Please try again.`);
+      setSeverity("error");
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleSelectAllClick = (event) => {
@@ -1171,50 +1266,59 @@ export default function FileManagement() {
                             size="small"
                           />
                         </Grid>
-                        {(role === "recruiter_sourcing" || role === "lead_sourcing") && ( 
-                        <Grid item xs={12} sm={6} md={4}>
-                          <TextField
-                            name="salary_offered_by_customer"
-                            label="Salary Offered by Customer"
-                            value={info.salary_offered_by_customer}
-                            onChange={handleInfoChange}
-                            variant="outlined"
-                            fullWidth
-                            size="small"
-                            disabled
-                          />
-                        </Grid>)}
-                        {(role === "recruiter_sourcing" || role === "lead_sourcing") && (
-                        <Grid item xs={12} sm={6} md={4}>
-                          <TextField
-                            name="remarks_for_sourcing"
-                            label="Remarks for Sourcing"
-                            multiline
-                            rows={4}
-                            variant="outlined"
-                            fullWidth
-                            size="small"
-                            value={info.remarks_for_sourcing}
-                            onChange={handleInfoChange}
-                            disabled
-                          />
-                        </Grid>)}
+                        {(role === "recruiter_sourcing" ||
+                          role === "lead_sourcing" ||
+                          role === "recruiter_processing" ||
+                          role === "lead_processing"||
+                          role === "manager") && (
+                          <Grid item xs={12} sm={6} md={4}>
+                            <TextField
+                              name="salary_offered_by_customer"
+                              label="Salary Offered by Customer"
+                              value={info.salary_offered_by_customer}
+                              onChange={handleInfoChange}
+                              variant="outlined"
+                              fullWidth
+                              size="small"
+                              disabled
+                            />
+                          </Grid>
+                        )}
+                        {(role === "recruiter_sourcing" ||
+                          role === "lead_sourcing") && (
+                          <Grid item xs={12} sm={6} md={4}>
+                            <TextField
+                              name="remarks_for_sourcing"
+                              label="Remarks for Sourcing"
+                              multiline
+                              rows={4}
+                              variant="outlined"
+                              fullWidth
+                              size="small"
+                              value={info.remarks_for_sourcing}
+                              onChange={handleInfoChange}
+                              disabled
+                            />
+                          </Grid>
+                        )}
                         {/* Remarks for Processing */}
-                        {(role === "recruiter_processing" || role === "lead_processing") && (
-                        <Grid item xs={12} sm={6} md={4}>
-                          <TextField
-                            name="remarks_for_processing"
-                            label="Remarks for Processing"
-                            multiline
-                            rows={4}
-                            variant="outlined"
-                            fullWidth
-                            size="small"
-                            value={info.remarks_for_processing}
-                            onChange={handleInfoChange}
-                            disabled
-                          />
-                        </Grid>)}
+                        {(role === "recruiter_processing" ||
+                          role === "lead_processing") && (
+                          <Grid item xs={12} sm={6} md={4}>
+                            <TextField
+                              name="remarks_for_processing"
+                              label="Remarks for Processing"
+                              multiline
+                              rows={4}
+                              variant="outlined"
+                              fullWidth
+                              size="small"
+                              value={info.remarks_for_processing}
+                              onChange={handleInfoChange}
+                              disabled
+                            />
+                          </Grid>
+                        )}
                       </>
                     )}
                   </Grid>
@@ -1240,7 +1344,9 @@ export default function FileManagement() {
                       alignItems="center"
                       mb={2}
                     >
-                      <Typography variant="h6">Upload Resumes</Typography>
+                      <Typography variant="h6">
+                        Parsing Failed Resumes
+                      </Typography>
                       <Box></Box>
                       <Button
                         onClick={handleOpenModal}
@@ -1256,10 +1362,14 @@ export default function FileManagement() {
                         onUpload={handleUpload}
                       />
                     </Box>
+                    {/* CODE FOR VALIDATE BUTTON */}
                     {loading ? (
                       <CircularProgress />
                     ) : (
                       <TableContainer>
+                        {/* <Typography variant="h5">
+                          Parsing Failed Resumes
+                        </Typography> */}
                         <Table>
                           <TableHead>
                             <TableRow sx={{ color: "#fff" }}>
@@ -1278,47 +1388,48 @@ export default function FileManagement() {
                                   onChange={handleSelectAllClick}
                                 />
                               </TableCell>
-                              <TableCell>Name</TableCell>
-                              <TableCell>Email</TableCell>
+                              <TableCell>Requirement Id</TableCell>
                               <TableCell>Phone No</TableCell>
                               <TableCell>View</TableCell>
+                              <TableCell>Status</TableCell>
                               <TableCell>Delete</TableCell>
                             </TableRow>
                           </TableHead>
                           <TableBody>
-                            {uploadedResumes
-                              .slice(
-                                page * rowsPerPage,
-                                page * rowsPerPage + rowsPerPage
-                              )
-                              .map((resume, index) =>
-                                resume.insights.map((detail, subIndex) => {
-                                  const isItemSelected = isSelected(
-                                    `${index}-${subIndex}`
-                                  );
+                            {uploadedResumes.length === 0 ? (
+                              <TableRow>
+                                <TableCell colSpan={8} align="center">
+                                  <Typography variant="body1" gutterBottom>
+                                    No data available
+                                  </Typography>
+                                </TableCell>
+                              </TableRow>
+                            ) : (
+                              uploadedResumes
+                                .slice(
+                                  page * rowsPerPage,
+                                  page * rowsPerPage + rowsPerPage
+                                )
+                                .map((resume, index) => {
+                                  const isItemSelected = isSelected(`${index}`);
                                   return (
                                     <TableRow
-                                      key={`${index}-${subIndex}`}
+                                      key={`${index}`}
                                       hover
                                       onClick={(event) =>
-                                        handleClick(
-                                          event,
-                                          `${index}-${subIndex}`
-                                        )
+                                        handleClick(event, `${index}`)
                                       }
                                       role="checkbox"
                                       aria-checked={isItemSelected}
-                                      // selected={isItemSelected}
                                     >
                                       <TableCell padding="checkbox">
                                         <Checkbox checked={isItemSelected} />
                                       </TableCell>
-                                      <TableCell>{`${detail.first_name}${" "}${
-                                        detail.last_name
-                                      }`}</TableCell>
-                                      <TableCell>{detail.email_id}</TableCell>
                                       <TableCell>
-                                        {detail.phone_number}
+                                        {resume.requirement_id}
+                                      </TableCell>
+                                      <TableCell>
+                                        {resume.phone_number}
                                       </TableCell>
                                       <TableCell>
                                         <Tooltip title="View Resume">
@@ -1330,11 +1441,25 @@ export default function FileManagement() {
                                           </IconButton>
                                         </Tooltip>
                                       </TableCell>
+                                      {resume.state === "parse_failed" ? (
+                                        <TableCell>
+                                          <Chip
+                                            label="Parsing Failed"
+                                            color="warning"
+                                          />
+                                        </TableCell>
+                                      ) : (
+                                        <TableCell>
+                                          <Chip label="Failed" />
+                                        </TableCell>
+                                      )}
                                       <TableCell>
                                         <Tooltip title="Delete Resume">
                                           <IconButton
                                             color="error"
-                                            onClick={() => handleDelete(index)}
+                                            onClick={() =>
+                                              handleDelete(resume.resume_id)
+                                            }
                                           >
                                             <Delete />
                                           </IconButton>
@@ -1343,7 +1468,7 @@ export default function FileManagement() {
                                     </TableRow>
                                   );
                                 })
-                              )}
+                            )}
                           </TableBody>
                         </Table>
                       </TableContainer>
@@ -1357,7 +1482,113 @@ export default function FileManagement() {
                       onPageChange={handleChangePage}
                       onRowsPerPageChange={handleChangeRowsPerPage}
                     />
-                    <Box display="flex" justifyContent="flex-end" mt={2}>
+                  </Card>
+                </Grid>
+                <Grid item xs={12}>
+                  <Card sx={{ p: 3 }}>
+                    <Box
+                      display="flex"
+                      justifyContent="space-between"
+                      alignItems="center"
+                      mb={2}
+                    >
+                      <Typography variant="h6">
+                        Upload Failed Resumes
+                      </Typography>
+                      <Box></Box>
+                    </Box>
+                    {loading ? (
+                      <CircularProgress />
+                    ) : (
+                      <TableContainer>
+                        <Table>
+                          <TableHead>
+                            <TableRow sx={{ color: "#fff" }}>
+                              <TableCell>Requirement ID</TableCell>
+                              <TableCell>File Name</TableCell>
+                              <TableCell>Date</TableCell>
+                              <TableCell>Error Message</TableCell>
+                              <TableCell>Status</TableCell>
+                              <TableCell>Delete</TableCell>
+                            </TableRow>
+                          </TableHead>
+                          <TableBody>
+                            {failedUploads.length === 0 ? (
+                              <TableRow>
+                                <TableCell colSpan={8} align="center">
+                                  <Typography variant="body1" gutterBottom>
+                                    No data available
+                                  </Typography>
+                                </TableCell>
+                              </TableRow>
+                            ) : (
+                              failedUploads
+                                .slice(
+                                  page * rowsPerPage,
+                                  page * rowsPerPage + rowsPerPage
+                                )
+                                .map((upload, index) => {
+                                  // Extract the relevant part of the error message
+                                  const errorMessageMatch =
+                                    upload.error_message.match(
+                                      /UPLOAD error: (.*?) by/
+                                    );
+                                  const errorMessage = errorMessageMatch
+                                    ? errorMessageMatch[1]
+                                    : upload.error_message;
+
+                                  const formattedDate = new Date(
+                                    upload.date_of_posting
+                                  ).toLocaleString();
+                                  return (
+                                    <TableRow key={upload.id}>
+                                      <TableCell>
+                                        {upload.requirement_name}
+                                      </TableCell>
+                                      <TableCell>
+                                        {upload.resume_filename}
+                                      </TableCell>
+                                      <TableCell>{formattedDate}</TableCell>
+                                      <TableCell>{errorMessage}</TableCell>
+                                      <TableCell>
+                                        <Chip
+                                          label="Upload Failed"
+                                          color="warning"
+                                        />
+                                      </TableCell>
+                                      <TableCell>
+                                        <Tooltip title="Delete Failed Upload">
+                                          <IconButton
+                                            color="error"
+                                            onClick={() =>
+                                              handleDeleteUploadFailed(
+                                                upload.id,
+                                                upload.resume_filename
+                                              )
+                                            }
+                                          >
+                                            <Delete />
+                                          </IconButton>
+                                        </Tooltip>
+                                      </TableCell>
+                                    </TableRow>
+                                  );
+                                })
+                            )}
+                          </TableBody>
+                        </Table>
+                      </TableContainer>
+                    )}
+                    <TablePagination
+                      rowsPerPageOptions={[5, 10, 25]}
+                      component="div"
+                      count={failedUploads.length}
+                      rowsPerPage={rowsPerPage}
+                      page={page}
+                      onPageChange={handleChangePage}
+                      onRowsPerPageChange={handleChangeRowsPerPage}
+                    />
+                    {/* <Box display="flex" justifyContent="flex-end" mt={2}>
                       <Button
                         variant="contained"
                         sx={{ backgroundColor: "rgb(31 91 139)" }}
@@ -1370,10 +1601,9 @@ export default function FileManagement() {
                           "Validate"
                         )}
                       </Button>
-                    </Box>
+                    </Box> */}
                   </Card>
                 </Grid>
-
                 <ResumeManagement isValidationDone={isValidationDone} />
               </>
             )}

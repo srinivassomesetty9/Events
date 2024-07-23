@@ -221,7 +221,7 @@ const ResumeManagement = ({ isValidationDone }) => {
             const sessionId = data.sessionId;
             console.log("The session id is:", sessionId);
 
-            await updateResumeState(resumeId, "communication_success", null);
+            await updateResumeState(resumeId, "communication_failed", null);
             console.log(
               "Updated resume state to communication success for resume ID:",
               resumeId

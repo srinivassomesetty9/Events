@@ -31,6 +31,11 @@ import {
   TableBody,
   TableContainer,
   Snackbar,
+  Tooltip,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
 } from "@mui/material";
 import axios from "axios";
 import { Refresh, Search, ViewList, ViewModule } from "@mui/icons-material";
@@ -39,11 +44,13 @@ import TopBar from "./TopBar";
 import BreadCrumb from "./BreadCrumb";
 import Process from "./Process";
 import Reports from "./Reports";
+import { useGlobalState } from "./GlobalStateContext";
 
 const opt_in_url_template = `https://api.jinnhire.in/jinnhire/data/requirements/{{requirement_id}}/opt/`;
 const opt_out_url_template = `https://api.jinnhire.in/jinnhire/data/requirements/{{requirement_id}}/opt-out/`;
 
 function Home() {
+  const { lastUpdateTime, setLastUpdateTime } = useGlobalState();
   const [showNotificationPanel, setShowNotificationPanel] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [requirements, setRequirements] = useState([]);
@@ -64,6 +71,7 @@ function Home() {
   const [show, setShow] = useState(false);
   const [message, setMessage] = useState("");
   const [severity, setSeverity] = useState("success");
+  const [sortBy, setSortBy] = useState('default');
 
   useEffect(() => {
     const userData = localStorage.getItem("user");
@@ -79,19 +87,19 @@ function Home() {
     if (userId) {
       fetchRequirements();
     }
-  }, [queryTime, userId]);
+  }, [lastUpdateTime, queryTime, userId]);
 
   useEffect(() => {
     fetchGlobalSettings();
   }, []);
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setQueryTime(Date.now());
-    }, 60000); // Fetch data every minute
+  // useEffect(() => {
+  //   const interval = setInterval(() => {
+  //     setQueryTime(Date.now());
+  //   }, 80000); // Fetch data every 80 seconds
 
-    return () => clearInterval(interval);
-  }, []);
+  //   return () => clearInterval(interval);
+  // }, []);
 
   const fetchGlobalSettings = async () => {
     const token = localStorage.getItem("token");
@@ -142,49 +150,13 @@ function Home() {
         })
       );
       setOptInCounts(optInCountsData);
-      setLoading(false); 
+      setLoading(false);
     } catch (error) {
       setErrorMessage(
         error.response?.data?.detail ||
           "An error occurred while fetching requirements."
       );
       setLoading(false);
-    }
-  };
-
-  const optInRequirement = async (requirement_id) => {
-    const token = localStorage.getItem("token");
-    try {
-      const response = await axios.post(
-        opt_in_url_template.replace("{{requirement_id}}", requirement_id),
-        {},
-        {
-          headers: {
-            Authorization: `Token ${token}`,
-          },
-        }
-      );
-      return response.data;
-    } catch (error) {
-      console.error("Opt-In Error:", error);
-    }
-  };
-
-  const optOutRequirement = async (requirement_id) => {
-    const token = localStorage.getItem("token");
-    try {
-      const response = await axios.post(
-        opt_out_url_template.replace("{{requirement_id}}", requirement_id),
-        {},
-        {
-          headers: {
-            Authorization: `Token ${token}`,
-          },
-        }
-      );
-      return response.data;
-    } catch (error) {
-      console.error("Opt-Out Error:", error);
     }
   };
 
@@ -314,6 +286,9 @@ function Home() {
       setShow(true);
       setSeverity("success");
       setMessage(`${isOptIn ? "Opted-IN" : "Opted-Out"}  successfully!`);
+
+      // Update global state to trigger a refetch for all users
+      setLastUpdateTime(Date.now());
     } catch (error) {
       console.error("Opt-In/Opt-Out Error:", error);
       setShow(true);
@@ -327,15 +302,18 @@ function Home() {
 
   const isRequirementDeactivated = (requirement) => {
     return (
-      requirement.resumes.filter(
-        (resume) => resume.resume_processed_by
-      ).length >
+      requirement.resumes.filter((resume) => resume.resume_processed_by)
+        .length >
       requirement.num_resumes_required + globalSurplusCount
     );
   };
 
   const handleSearchChange = (event) => {
     setSearchQuery(event.target.value);
+  };
+
+  const handleSortChange = (event) => {
+    setSortBy(event.target.value);
   };
 
   const handleListPageChange = (event, newPage) => {
@@ -347,21 +325,60 @@ function Home() {
     setListPage(0);
   };
 
+  const formatDate = (dateString) => {
+    if (!dateString) return "NA";
+
+    const date = new Date(dateString);
+    if (isNaN(date.getTime())) return "NA"; // Check if invalid date
+
+    const day = String(date.getDate()).padStart(2, "0");
+    const month = String(date.getMonth() + 1).padStart(2, "0"); // Month is zero-indexed
+    const year = date.getFullYear();
+
+    return `${day}-${month}-${year}`;
+  };
+
   const filteredRequirements = requirements.filter((requirement) =>
     requirement.requirement_id.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  const optedInRequirements = requirements.filter(
-    (requirement) => requirement.active
-  );
+  const optedInRequirements = requirements
+
+  const sortedRequirements = filteredRequirements.slice().sort((a, b) => {
+    switch (sortBy) {
+      case "priority":
+        const priorityOrder = { High: 3, Medium: 2, Low: 1 };
+        return (
+          priorityOrder[b.requirement_priority] -
+          priorityOrder[a.requirement_priority]
+        );
+      case "bounty":
+        return b.bounty - a.bounty;
+      case "stars":
+        return b.stars - a.stars;
+      case "date":
+        return new Date(b.date_time_posted) - new Date(a.date_time_posted);
+      default:
+        const priorityOrderDefault = { High: 3, Medium: 2, Low: 1 };
+        const priorityComparison =
+          priorityOrderDefault[b.requirement_priority] -
+          priorityOrderDefault[a.requirement_priority];
+        if (priorityComparison !== 0) return priorityComparison;
+
+        const bountyComparison = b.bounty - a.bounty;
+        if (bountyComparison !== 0) return bountyComparison;
+
+        return b.stars - a.stars;
+    }
+  });
 
   const displayedRequirements =
     viewMode === "card"
-      ? filteredRequirements.slice(
+      ? sortedRequirements.slice(
           (currentPage - 1) * itemsPerPage,
           currentPage * itemsPerPage
         )
-      : filteredRequirements.slice(
+      : sortedRequirements.slice(
           listPage * rowsPerPage,
           listPage * rowsPerPage + rowsPerPage
         );
@@ -423,7 +440,8 @@ function Home() {
             <Tab label="Source" />
             {loginRole !== "recruiter_sourcing" &&
             loginRole !== "lead_sourcing" &&
-            loginRole !== "account_manager" ? (
+            loginRole !== "account_manager"&&
+            loginRole !== "manager" ? (
               <Tab label="Process" />
             ) : (
               <Tab label="Process" disabled />
@@ -460,6 +478,20 @@ function Home() {
                   }}
                   style={{ borderRadius: "20px" }}
                 />
+                <FormControl variant="outlined" size="small" sx={{ mr: 2 }}>
+                  <InputLabel>Sort By</InputLabel>
+                  <Select
+                    value={sortBy}
+                    onChange={handleSortChange}
+                    label="Sort By"
+                  >
+                    <MenuItem value="default">Default</MenuItem>
+                    <MenuItem value="date">Date</MenuItem>
+                    <MenuItem value="priority">Priority</MenuItem>
+                    <MenuItem value="bounty">Bounty</MenuItem>
+                    <MenuItem value="stars">Stars</MenuItem>
+                  </Select>
+                </FormControl>
                 <IconButton
                   color={viewMode === "card" ? "primary" : "default"}
                   onClick={() => setViewMode("card")}
@@ -605,9 +637,17 @@ function Home() {
                           <Typography
                             variant="body2"
                             color="text.secondary"
-                            sx={{ fontSize: 12, mb: 1 }}
+                            sx={{ fontSize: 12 }}
                           >
                             Experience: {requirement.experience} years
+                          </Typography>
+                          <Typography
+                            variant="body2"
+                            color="text.secondary"
+                            sx={{ fontSize: 12, mb: 1 }}
+                          >
+                            Date Posted:{" "}
+                            {formatDate(requirement.date_time_posted)}
                           </Typography>
                           <Divider />
                           <Box
@@ -658,6 +698,8 @@ function Home() {
                                   color={
                                     requirement.active
                                       ? "success.main"
+                                      : requirement.users_opted.length >= 5
+                                      ? "text.disabled"
                                       : "error.main"
                                   }
                                   sx={{
@@ -668,12 +710,31 @@ function Home() {
                                 >
                                   {requirement.active ? "Opt-In" : "Opt-Out"}
                                 </Typography>
-                                <Switch
-                                  checked={requirement.active || false}
-                                  onChange={(e) => handleToggle(requirement, e)}
-                                  color="primary"
-                                  size="small"
-                                />
+                                <Tooltip
+                                  title={
+                                    !requirement.active
+                                      ? requirement.users_opted.length >= 5
+                                        ? "Opt-in limit reached"
+                                        : ""
+                                      : ""
+                                  }
+                                  arrow
+                                >
+                                  <span>
+                                    <Switch
+                                      checked={requirement.active || false}
+                                      onChange={(e) =>
+                                        handleToggle(requirement, e)
+                                      }
+                                      color="primary"
+                                      size="small"
+                                      disabled={
+                                        requirement.users_opted.length >= 5 &&
+                                        !requirement.active
+                                      }
+                                    />
+                                  </span>
+                                </Tooltip>
                               </Box>
                             )}
                             {(loginRole === "recruiter_sourcing" ||
@@ -739,12 +800,13 @@ function Home() {
             ) : (
               <TableContainer component={Paper}>
                 <Table>
-                  <TableHead>
+                  <TableHead sx={{color:"white"}}>
                     <TableRow>
                       <TableCell>SNO</TableCell>
                       <TableCell>Requirement ID</TableCell>
                       <TableCell>Job Role</TableCell>
                       <TableCell>Location</TableCell>
+                      <TableCell>Date Posted</TableCell>
                       <TableCell>Experience</TableCell>
                       {(loginRole === "recruiter_processing" ||
                         loginRole === "lead_processing") && (
@@ -764,88 +826,140 @@ function Home() {
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {displayedRequirements.map((requirement, index) => (
-                      <TableRow key={requirement.requirement_id}>
-                        <TableCell>{index + 1}</TableCell>
-                        <TableCell
-                          onClick={() => handleCardClick(requirement)}
-                          style={{ cursor: "pointer", color: "blue" }}
-                        >
-                          {requirement.requirement_id}
-                        </TableCell>
-                        <TableCell>{requirement.job_role}</TableCell>
-                        <TableCell>{requirement.location}</TableCell>
-                        <TableCell>{requirement.experience}</TableCell>
-                        {(loginRole === "recruiter_processing" ||
-                          loginRole === "lead_processing") && (
+                    {displayedRequirements
+                      .sort((a, b) => {
+                        const priorityOrder = { High: 3, Medium: 2, Low: 1 };
+
+                        // Ensure properties are defined and handle cases where they might be null or undefined
+                        const priorityA = a.requirement_priority || "Low";
+                        const priorityB = b.requirement_priority || "Low";
+
+                        // Compare priorities
+                        if (
+                          priorityOrder[priorityA] !== priorityOrder[priorityB]
+                        ) {
+                          return (
+                            priorityOrder[priorityB] - priorityOrder[priorityA]
+                          );
+                        }
+
+                        // Compare bounties (handling undefined or null)
+                        const bountyA = a.bounty || 0;
+                        const bountyB = b.bounty || 0;
+                        if (bountyA !== bountyB) {
+                          return bountyB - bountyA;
+                        }
+
+                        // Compare stars (handling undefined or null)
+                        const starsA = a.stars || 0;
+                        const starsB = b.stars || 0;
+                        return starsB - starsA;
+                      })
+                      .map((requirement, index) => (
+                        <TableRow key={requirement.requirement_id}>
+                          <TableCell>{index + 1}</TableCell>
+                          <TableCell
+                            onClick={() => handleCardClick(requirement)}
+                            style={{ cursor: "pointer", color: "blue" }}
+                          >
+                            {requirement.requirement_id}
+                          </TableCell>
+                          <TableCell>{requirement.job_role}</TableCell>
+                          <TableCell>{requirement.location}</TableCell>
+                          <TableCell>
+                            {formatDate(requirement.date_time_posted)}
+                          </TableCell>
+                          <TableCell>{requirement.experience}</TableCell>
+                          {(loginRole === "recruiter_processing" ||
+                            loginRole === "lead_processing") && (
+                            <TableCell>
+                              <Chip
+                                label={
+                                  requirement.active ? "Opted In" : "Opted Out"
+                                }
+                                color={
+                                  requirement.active ? "success" : "default"
+                                }
+                              />
+                            </TableCell>
+                          )}
                           <TableCell>
                             <Chip
-                              label={
-                                requirement.active ? "Opted In" : "Opted Out"
-                              }
-                              color={requirement.active ? "success" : "default"}
-                            />
-                          </TableCell>
-                        )}
-                        <TableCell>
-                          <Chip
-                            label={`${requirement.requirement_priority}`}
-                            color={
-                              requirement.requirement_priority === "High"
-                                ? "error"
-                                : "default"
-                            }
-                          />
-                        </TableCell>
-                        <TableCell>
-                          {optInCounts[requirement.requirement_id] || 0}
-                        </TableCell>
-                        <TableCell>
-                          {
-                            requirement.resumes.filter(
-                              (resume) => resume.resume_processed_by
-                            ).length
-                          }{" "}
-                          / {requirement.num_resumes_required}
-                        </TableCell>
-                        {(loginRole === "recruiter_processing" ||
-                          loginRole === "lead_processing") && (
-                          <TableCell>
-                            <Switch
-                              checked={requirement.active}
-                              onChange={(event) =>
-                                handleToggle(requirement, event)
+                              label={`${requirement.requirement_priority}`}
+                              color={
+                                requirement.requirement_priority === "High"
+                                  ? "error"
+                                  : "default"
                               }
                             />
-                            {isRequirementDeactivated(requirement) && (
-                              <Alert severity="warning" sx={{ mt: 2 }}>
-                                Deactivated
-                              </Alert>
-                            )}
                           </TableCell>
-                        )}
-                        {(loginRole === "recruiter_sourcing" ||
-                          loginRole === "lead_sourcing") && (
                           <TableCell>
-                            {requirement.resumes.length >= 1 ? (
-                              <Chip
-                                label="Yes"
-                                color="success"
-                                size="small"
-                                sx={{ fontWeight: "bold", fontSize: 12 }}
-                              />
-                            ) : (
-                              <Chip
-                                label="No"
-                                color="warning"
-                                size="small"
-                                sx={{ fontWeight: "bold", fontSize: 12 }}
-                              />
-                            )}
+                            {optInCounts[requirement.requirement_id] || 0}
                           </TableCell>
-                        )}
-                      </TableRow>
-                    ))}
+                          <TableCell>
+                            {
+                              requirement.resumes.filter(
+                                (resume) => resume.resume_processed_by
+                              ).length
+                            }{" "}
+                            / {requirement.num_resumes_required}
+                          </TableCell>
+                          {(loginRole === "recruiter_processing" ||
+                            loginRole === "lead_processing") && (
+                            <TableCell>
+                              <Tooltip
+                                title={
+                                  !requirement.active
+                                    ? requirement.users_opted.length >= 5
+                                      ? "Opt-in limit reached"
+                                      : ""
+                                    : ""
+                                }
+                                placement="top"
+                                arrow
+                              >
+                                <span>
+                                  <Switch
+                                    checked={requirement.active}
+                                    onChange={(event) =>
+                                      handleToggle(requirement, event)
+                                    }
+                                    disabled={
+                                      requirement.users_opted.length >= 5 &&
+                                      !requirement.active
+                                    } // Disable switch if limit reached and it's not active
+                                  />
+                                </span>
+                              </Tooltip>
+                              {isRequirementDeactivated(requirement) && (
+                                <Alert severity="warning" sx={{ mt: 2 }}>
+                                  Deactivated
+                                </Alert>
+                              )}
+                            </TableCell>
+                          )}
+                          {(loginRole === "recruiter_sourcing" ||
+                            loginRole === "lead_sourcing") && (
+                            <TableCell>
+                              {requirement.resumes.length >= 1 ? (
+                                <Chip
+                                  label="Yes"
+                                  color="success"
+                                  size="small"
+                                  sx={{ fontWeight: "bold", fontSize: 12 }}
+                                />
+                              ) : (
+                                <Chip
+                                  label="No"
+                                  color="warning"
+                                  size="small"
+                                  sx={{ fontWeight: "bold", fontSize: 12 }}
+                                />
+                              )}
+                            </TableCell>
+                          )}
+                        </TableRow>
+                      ))}
                   </TableBody>
                 </Table>
                 <TablePagination
@@ -873,7 +987,7 @@ function Home() {
             )}
           </TabPanel>
           <TabPanel value={activeTab} index={1}>
-            <Process optedInRequirements={optedInRequirements}/>
+            <Process optedInRequirements={optedInRequirements} />
           </TabPanel>
           <TabPanel value={activeTab} index={3}>
             <Reports />

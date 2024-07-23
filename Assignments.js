@@ -18,6 +18,14 @@ import {
   Snackbar,
   Alert,
   Tooltip,
+  FormControl,
+  Select,
+  MenuItem,
+  Chip,
+  Checkbox,
+  ListItemText,
+  CircularProgress,
+  ListSubheader,
 } from "@mui/material";
 import {
   Delete as DeleteIcon,
@@ -30,12 +38,14 @@ const Assignments = () => {
   const [openModal, setOpenModal] = useState(false);
   const [selectedAssignment, setSelectedAssignment] = useState(null);
   const [modalAction, setModalAction] = useState("");
-  const [search, setSearch] = useState(""); // New state for search input
+  const [search, setSearch] = useState("");
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [show, setShow] = useState(false);
   const [message, setMessage] = useState("");
   const [severity, setSeverity] = useState("success");
+  const [selectedUsernames, setSelectedUsernames] = useState({});
+  const [loading, setLoading] = useState(true);
 
   const token = localStorage.getItem("token");
 
@@ -56,14 +66,14 @@ const Assignments = () => {
       setAssignments(response.data);
     } catch (error) {
       console.error("Error fetching assignments:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
   const handleActivateDeactivate = async (requirementId, isActive) => {
-    const assignmentIds = assignments
-      .filter((assignment) => assignment.requirement_id === requirementId)
-      .map((assignment) => assignment.id);
-
+    const selectedIds =
+      selectedUsernames[requirementId]?.map((item) => item.id) || [];
     const url = isActive
       ? "https://api.jinnhire.in/jinnhire/data/assignments/bulk_deactivate_assignments/"
       : "https://api.jinnhire.in/jinnhire/data/assignments/bulk_activate_assignments/";
@@ -71,7 +81,7 @@ const Assignments = () => {
     try {
       await axios.post(
         url,
-        { user_ids: assignmentIds, requirement_id: requirementId},
+        { user_ids: selectedIds, requirement_id: requirementId },
         {
           headers: {
             Authorization: `Token ${token}`,
@@ -84,6 +94,7 @@ const Assignments = () => {
       setMessage(
         `${isActive ? "Deactivated" : "Activated"} assignments successfully!`
       );
+      setSelectedUsernames({});
       fetchAssignments();
     } catch (error) {
       console.error(
@@ -106,23 +117,37 @@ const Assignments = () => {
       .filter((assignment) => assignment.requirement_id === requirementId)
       .map((assignment) => assignment.id);
 
+    const selectedIds =
+      selectedUsernames[requirementId]?.map((item) => item.id) || [];
+    const token = localStorage.getItem("token");
+
+    if (assignmentIds.length === 0) {
+      setShow(true);
+      setSeverity("warning");
+      setMessage("No assignments found for the given requirement ID.");
+      return;
+    }
+
     try {
-      await axios.post(
-        "https://api.jinnhire.in/jinnhire/data/assignments/delete_assignment/",
-        { assignment_id: assignmentIds },
+      const response = await axios.delete(
+        "https://api.jinnhire.in/jinnhire/data/assignments/delete_assignments/",
         {
+          data: { assignment_ids: selectedIds },
           headers: {
             Authorization: `Token ${token}`,
             "Content-Type": "application/json",
           },
         }
       );
+
       setShow(true);
       setSeverity("success");
       setMessage("Deleted assignments successfully!");
+      setSelectedUsernames({});
       fetchAssignments();
     } catch (error) {
       console.error("Error deleting assignments:", error);
+
       setShow(true);
       setSeverity("error");
       setMessage(
@@ -166,11 +191,46 @@ const Assignments = () => {
     setPage(0);
   };
 
+  const handleSelectUsername = (requirementId, assignment) => {
+    setSelectedUsernames((prevSelectedUsernames) => {
+      const newSelected = { ...prevSelectedUsernames };
+      if (newSelected[requirementId]?.some((u) => u.id === assignment.id)) {
+        newSelected[requirementId] = newSelected[requirementId].filter(
+          (u) => u.id !== assignment.id
+        );
+      } else {
+        newSelected[requirementId] = [
+          ...(newSelected[requirementId] || []),
+          { id: assignment.id, username: assignment.user_username },
+        ];
+      }
+      return newSelected;
+    });
+  };
+
+  const handleSelectAllUsernames = (requirementId) => {
+    setSelectedUsernames((prevSelectedUsernames) => {
+      const usernames = assignments
+        .filter((assignment) => assignment.requirement_id === requirementId)
+        .map((assignment) => ({
+          id: assignment.id,
+          username: assignment.user_username,
+        }));
+
+      const allSelected =
+        selectedUsernames[requirementId]?.length === usernames.length;
+
+      return {
+        ...prevSelectedUsernames,
+        [requirementId]: allSelected ? [] : usernames,
+      };
+    });
+  };
+
   const filteredAssignments = assignments.filter((assignment) =>
     assignment.requirement_id.toLowerCase().includes(search.toLowerCase())
   );
 
-  // Grouping assignments by requirement_id
   const groupedAssignments = filteredAssignments.reduce((acc, assignment) => {
     if (!acc[assignment.requirement_id]) {
       acc[assignment.requirement_id] = [];
@@ -178,6 +238,16 @@ const Assignments = () => {
     acc[assignment.requirement_id].push(assignment);
     return acc;
   }, {});
+
+  const formatUsername = (username) => {
+    if (typeof username !== "string") {
+      username = String(username);
+    }
+    return username.replace(
+      /(\w+)\.(\w+)@.+/,
+      (_, firstName, lastName) => `${firstName} ${lastName}`
+    );
+  };
 
   return (
     <Box>
@@ -210,16 +280,22 @@ const Assignments = () => {
       <TableContainer component={Paper}>
         <Table>
           <TableHead>
-            <TableRow sx={{ color: "#fff" }}>
+            <TableRow>
               <TableCell>SNO</TableCell>
+              <TableCell>Customer Name</TableCell>
               <TableCell>Requirement ID</TableCell>
               <TableCell>Username</TableCell>
-              <TableCell>Customer Name</TableCell>
               <TableCell>Action</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {Object.keys(groupedAssignments).length === 0 ? (
+            {loading ? (
+              <TableRow>
+                <TableCell colSpan={5} align="center">
+                  <CircularProgress />
+                </TableCell>
+              </TableRow>
+            ) : Object.keys(groupedAssignments).length === 0 ? (
               <TableRow>
                 <TableCell colSpan={8} align="center">
                   <Typography variant="body1" gutterBottom>
@@ -249,27 +325,146 @@ const Assignments = () => {
                                   groupedAssignments[requirementId].length
                                 }
                               >
+                                {assignment.customer_name}
+                              </TableCell>
+                              <TableCell
+                                rowSpan={
+                                  groupedAssignments[requirementId].length
+                                }
+                              >
                                 {assignment.requirement_id}
                               </TableCell>
                             </>
                           )}
-                          <TableCell>{assignment.user_username}</TableCell>
-                          <TableCell>{assignment.customer_name}</TableCell>
                           {subIndex === 0 && (
                             <TableCell
-                              rowSpan={
-                                groupedAssignments[requirementId].length
-                              }
+                              rowSpan={groupedAssignments[requirementId].length}
+                            >
+                              <FormControl fullWidth>
+                                <Select
+                                  multiple
+                                  value={
+                                    selectedUsernames[requirementId]?.map(
+                                      (item) => item.id
+                                    ) || []
+                                  }
+                                  onChange={() => {}}
+                                  defaultValue={groupedAssignments[
+                                    requirementId
+                                  ].map((assignment) => assignment.id)}
+                                  renderValue={(selected) => (
+                                    <Box
+                                      sx={{
+                                        display: "flex",
+                                        flexWrap: "wrap",
+                                        gap: 0.5,
+                                      }}
+                                    >
+                                      {selected.map((id) => {
+                                        const user = selectedUsernames[
+                                          requirementId
+                                        ]?.find((item) => item.id === id);
+                                        return user ? (
+                                          <Chip
+                                            key={id}
+                                            label={formatUsername(
+                                              user.username
+                                            )}
+                                          />
+                                        ) : null;
+                                      })}
+                                    </Box>
+                                  )}
+                                >
+                                  <MenuItem
+                                    value="select-all"
+                                    onClick={() =>
+                                      handleSelectAllUsernames(requirementId)
+                                    }
+                                  >
+                                    <Checkbox
+                                      checked={
+                                        selectedUsernames[requirementId]
+                                          ?.length ===
+                                        groupedAssignments[requirementId].length
+                                      }
+                                    />
+                                    <ListItemText primary="Select All" />
+                                  </MenuItem>
+                                  <ListSubheader>Active</ListSubheader>
+                                  {groupedAssignments[requirementId]
+                                    .filter((assignment) => assignment.active)
+                                    .map((assignment) => (
+                                      <MenuItem
+                                        key={assignment.id}
+                                        value={assignment.id}
+                                      >
+                                        <Checkbox
+                                          checked={selectedUsernames[
+                                            requirementId
+                                          ]?.some(
+                                            (item) => item.id === assignment.id
+                                          )}
+                                          onChange={() =>
+                                            handleSelectUsername(
+                                              requirementId,
+                                              assignment
+                                            )
+                                          }
+                                        />
+                                        <ListItemText
+                                          primary={formatUsername(
+                                            assignment.user_username
+                                          )}
+                                        />
+                                      </MenuItem>
+                                    ))}
+                                  <ListSubheader>Non-Active</ListSubheader>
+                                  {groupedAssignments[requirementId]
+                                    .filter((assignment) => !assignment.active)
+                                    .map((assignment) => (
+                                      <MenuItem
+                                        key={assignment.id}
+                                        value={assignment.id}
+                                      >
+                                        <Checkbox
+                                          checked={selectedUsernames[
+                                            requirementId
+                                          ]?.some(
+                                            (item) => item.id === assignment.id
+                                          )}
+                                          onChange={() =>
+                                            handleSelectUsername(
+                                              requirementId,
+                                              assignment
+                                            )
+                                          }
+                                        />
+                                        <ListItemText
+                                          primary={formatUsername(
+                                            assignment.user_username
+                                          )}
+                                        />
+                                      </MenuItem>
+                                    ))}
+                                </Select>
+                              </FormControl>
+                            </TableCell>
+                          )}
+
+                          {subIndex === 0 && (
+                            <TableCell
+                              rowSpan={groupedAssignments[requirementId].length}
                             >
                               <Tooltip
                                 title={
-                                  assignment.active
-                                    ? "Deactivate All"
-                                    : "Activate All"
+                                  assignment.active ? "Deactivate" : "Activate"
                                 }
                               >
                                 <IconButton
-                                  color={assignment.active ? "warning" : "success"}
+                                  color={
+                                    assignment.active ? "warning" : "success"
+                                  }
                                   onClick={() =>
                                     handleActivateDeactivate(
                                       requirementId,
@@ -284,12 +479,10 @@ const Assignments = () => {
                                   )}
                                 </IconButton>
                               </Tooltip>
-                              <Tooltip title="Delete All">
+                              <Tooltip title="Delete">
                                 <IconButton
                                   color="error"
-                                  onClick={() =>
-                                    handleOpenModal(requirementId, "delete")
-                                  }
+                                  onClick={() => handleDelete(requirementId)}
                                 >
                                   <DeleteIcon />
                                 </IconButton>
@@ -338,7 +531,8 @@ const Assignments = () => {
               : "Deactivate Assignments"}
           </Typography>
           <Typography id="modal-description" sx={{ mt: 2 }}>
-            Are you sure you want to {modalAction} assignments with requirement ID {selectedAssignment}?
+            Are you sure you want to {modalAction} assignments with requirement
+            ID {selectedAssignment}?
           </Typography>
           <Box mt={4} display="flex" justifyContent="space-between">
             <Button

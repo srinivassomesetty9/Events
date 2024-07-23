@@ -36,6 +36,10 @@ import {
   Snackbar,
   Tooltip,
   CircularProgress,
+  Divider,
+  Switch,
+  Menu,
+  MenuItem as MenuActionItem
 } from "@mui/material";
 import {
   CheckCircle,
@@ -47,6 +51,7 @@ import {
   LockOpen,
   Download,
   DownloadDone,
+  MoreVert,
 } from "@mui/icons-material";
 import axios from "axios";
 import LockIcon from "@mui/icons-material/Lock";
@@ -82,53 +87,89 @@ const theme = createTheme({
   },
 });
 
+// const modalStyle = {
+//   position: "absolute",
+//   top: "50%",
+//   left: "50%",
+//   transform: "translate(-50%, -50%)",
+//   width: "90%",
+//   maxWidth: 450,
+//   bgcolor: "background.paper",
+//   boxShadow: 24,
+//   p: 4,
+//   textAlign: "center",
+//   display: "flex",
+//   flexDirection: "column",
+//   alignItems: "center",
+//   borderRadius: "20px",
+// };
+
+// const checkboxContainerStyle = {
+//   display: "flex",
+//   flexDirection: "column",
+//   alignItems: "flex-start",
+//   width: "100%",
+// };
+
+// const buttonContainerStyle = {
+//   marginTop: "auto",
+//   display: "flex",
+//   justifyContent: "space-between",
+//   width: "100%",
+// };
+
+// Styles for the vertical tabs and checkboxes
+const verticalTabsStyles = {
+  display: "flex",
+  height: "60vh",
+  bgcolor: "#f5f5f5",
+  borderRadius: 3,
+  border: "1px solid #e0e0e0",
+};
+
+const tabStyles = {
+  borderRight: 1,
+  borderColor: "divider",
+  minWidth: "180px",
+  bgcolor: "#eeeeee",
+};
+
+const checkboxStyles = (checked) => ({
+  color: checked ? "primary.main" : "default",
+});
+
+const tableContainerStyles = {
+  flexGrow: 1,
+  padding: "16px",
+  bgcolor: "#ffffff",
+  borderRadius: 3,
+  boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
+  // overflowX: "hidden",  // Enable horizontal scrolling
+  // overflowY: "auto", // Disable vertical scrolling
+};
+
+
 const modalStyle = {
   position: "absolute",
   top: "50%",
   left: "50%",
   transform: "translate(-50%, -50%)",
-  width: "90%",
-  maxWidth: 450,
+  width: 400,
   bgcolor: "background.paper",
+  border: "2px solid #000",
   boxShadow: 24,
   p: 4,
-  textAlign: "center",
-  display: "flex",
-  flexDirection: "column",
-  alignItems: "center",
-  borderRadius: "20px",
 };
 
 const checkboxContainerStyle = {
   display: "flex",
   flexDirection: "column",
-  alignItems: "flex-start",
-  width: "100%",
 };
 
 const buttonContainerStyle = {
-  marginTop: "auto",
   display: "flex",
   justifyContent: "space-between",
-  width: "100%",
 };
-
-// Define custom styles for checkboxes
-const checkboxStyles = {
-  positive: {
-    "&.Mui-checked": {
-      color: "green",
-    },
-    color: "green",
-  },
-  negative: {
-    "&.Mui-checked": {
-      color: "red",
-    },
-    color: "red",
-  },
-};
-
 const Process = ({ optedInRequirements }) => {
   const [profiles, setProfiles] = useState([]);
   const [selectedTab, setSelectedTab] = useState(0); // Default selected tab index
@@ -145,11 +186,15 @@ const Process = ({ optedInRequirements }) => {
   const [selectedOptions, setSelectedOptions] = useState([]);
   const [lockStatus, setLockStatus] = useState({});
   const [fileLinks, setFileLinks] = useState({});
+  const [optedIn, setOptedIn] = useState(
+    optedInRequirements.reduce((acc, req) => ({ ...acc, [req]: true }), {})
+  );
+  const [anchorEl, setAnchorEl] = useState(null);
 
   const [show, setShow] = useState(false);
   const [message, setMessage] = useState("");
   const [severity, setSeverity] = useState("success");
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   const tableHeaders = {
     0: [
@@ -157,10 +202,9 @@ const Process = ({ optedInRequirements }) => {
       "Job Description ID",
       "Candidate Name",
       "Phone",
-      "Email Address",
-      "Current Question",
+      "Remarks",
+      "Skills",
       "Actions",
-      "Questions List",
     ],
     1: [
       "SNO",
@@ -169,7 +213,6 @@ const Process = ({ optedInRequirements }) => {
       "Phone",
       "Email Address",
       "Current Question",
-      "Reason for Intervention",
       "Actions",
       "Questions List",
     ],
@@ -180,7 +223,7 @@ const Process = ({ optedInRequirements }) => {
       "Phone",
       "Email Address",
       "Current Question",
-      "Reason for Failure",
+      "Reason for Intervention",
       "Actions",
       "Questions List",
     ],
@@ -191,7 +234,7 @@ const Process = ({ optedInRequirements }) => {
       "Phone",
       "Email Address",
       "Current Question",
-      "Waiting Time",
+      "Reason for Failure",
       "Actions",
       "Questions List",
     ],
@@ -212,7 +255,6 @@ const Process = ({ optedInRequirements }) => {
       "Job Description ID",
       "Candidate Name",
       "Phone",
-      "Email Address",
       "Current Question",
       "Follow-up Count",
       "Actions",
@@ -224,7 +266,10 @@ const Process = ({ optedInRequirements }) => {
       "Candidate Name",
       "Phone",
       "Email Address",
+      "Current Question",
+      "Waiting Time",
       "Actions",
+      "Questions List",
     ],
   };
 
@@ -248,7 +293,14 @@ const Process = ({ optedInRequirements }) => {
     { text: "Candidate may not join", style: checkboxStyles.negative },
     { text: "Candidate notice period is high", style: checkboxStyles.negative },
     { text: "Candidate is not responding", style: checkboxStyles.negative },
-    { text: "Candidate is not looking for change", style: checkboxStyles.negative },
+    {
+      text: "Candidate is not suitable/ irrelevent",
+      style: checkboxStyles.negative,
+    },
+    {
+      text: "Candidate is not looking for change",
+      style: checkboxStyles.negative,
+    },
     { text: "Candidate might not relocate", style: checkboxStyles.negative },
     {
       text: "Candidate is not having good communication skills",
@@ -274,24 +326,32 @@ const Process = ({ optedInRequirements }) => {
     }
   }, [profiles]);
 
+  // useEffect(() => {
+  //   // Update data every 30 seconds
+  //   const intervalId = setInterval(() => {
+  //     fetchProfiles(selectedTab);
+  //   }, 30000);
+
+  //   return () => clearInterval(intervalId);
+  // }, [selectedTab]);
+
   const fetchProfiles = async (tabIndex) => {
-    setLoading(true);
+    // setLoading(true);
     let reasonForConversationStopping = "";
     let additionalParams = {};
 
     switch (tabIndex) {
       case 0:
+        fetchCommunicationFailedProfiles();
+        return;
+      case 1:
         reasonForConversationStopping = "success";
         break;
-      case 1:
+      case 2:
         reasonForConversationStopping = "not_interested";
         break;
-      case 2:
-        reasonForConversationStopping = "not_qualified";
-        break;
       case 3:
-        reasonForConversationStopping = "waiting";
-        additionalParams = { conversation_continuing: "FUTURE" };
+        reasonForConversationStopping = "not_qualified";
         break;
       case 4:
         reasonForConversationStopping = "continuing";
@@ -301,8 +361,9 @@ const Process = ({ optedInRequirements }) => {
         additionalParams = { conversation_continuing: "YES" };
         break;
       case 6:
-        fetchCommunicationFailedProfiles();
-        return;
+        reasonForConversationStopping = "waiting";
+        additionalParams = { conversation_continuing: "FUTURE" };
+        break;
       default:
         break;
     }
@@ -328,80 +389,53 @@ const Process = ({ optedInRequirements }) => {
     }
   };
 
-  const fetchCommunicationFailedProfiles = async () => {
-    setLoading(true);
+  const fetchCommunicationFailedProfiles = async (jdId) => {
     const token = localStorage.getItem("token");
     const cacheBuster = new Date().getTime();
 
     try {
-      // Fetch all requirements
-      // const requirementsResponse = await fetch(
-      //   `https://api.jinnhire.in/jinnhire/data/requirements/?t=${cacheBuster}`,
-      //   {
-      //     headers: {
-      //       "Content-Type": "application/json",
-      //       Authorization: `Token ${token}`,
-      //     },
-      //   }
-      // );
+      const resumesResponse = await fetchResumesByStatus(
+        "communication_failed"
+      );
 
-      // if (!requirementsResponse.ok) {
-      //   throw new Error(`HTTP error! Status: ${requirementsResponse.status}`);
-      // }
-
-      const requirements =  optedInRequirements;
-      const allProfiles = [];
-
-      for (let req of requirements) {
-        const requirementId = req.requirement_id;
-
-        if (!requirementId) {
-          console.error("Requirement ID is missing from the data:", req);
-          continue;
-        }
-
-        try {
-          const resumesResponse = await fetchResumesByStatus(
-            requirementId,
-            "communication_failed"
-          );
-
-          if (!Array.isArray(resumesResponse) || resumesResponse.length === 0) {
-            continue;
-          }
-
-          const profilesData = resumesResponse.map((resume) => ({
-            resume_id: resume.resume_id,
-            jd_id: requirementId,
-            candidate_fname: resume.insights[0]?.first_name || "",
-            candidate_last_name: resume.insights[0]?.last_name || "",
-            candidate_phone_number: resume.phone_number || "",
-            emailAddress: resume.insights[0]?.email_id || "",
-            state: resume.state,
-          }));
-
-          allProfiles.push(...profilesData);
-        } catch (error) {
-          console.error("Failed to fetch resumes:", error);
-        }
+      if (!Array.isArray(resumesResponse) || resumesResponse.length === 0) {
+        console.error("No resumes found with communication_failed status");
+        setProfiles([]);
+        setLoading(false);
+        return;
       }
+      const requirements = optedInRequirements;
 
-      console.log("Fetched Profiles:", allProfiles); // Debugging log
-      setProfiles(allProfiles);
+      const profilesData = resumesResponse.map((resume) => ({
+        resume_id: resume.resume_id,
+        jd_id: resume.requirement_id,
+        candidate_fname: resume.insights[0]?.first_name || "",
+        candidate_last_name: resume.insights[0]?.last_name || "",
+        candidate_phone_number: resume.phone_number || "",
+        emailAddress: resume.insights[0]?.email_id || "",
+        state: resume.state,
+        file_link: resume.file_link,
+        remarks: resume.remarks,
+        skills: resume.insights[0].mandatory_skills,
+      }));
+
+      console.log("Fetched Profiles:", profilesData); // Debugging log
+      setProfiles(profilesData);
     } catch (error) {
-      console.error("Failed to fetch requirements:", error);
+      console.error("Failed to fetch resumes:", error);
+      setProfiles([]);
     } finally {
       setLoading(false);
     }
   };
 
-  const fetchResumesByStatus = async (requirementId, status) => {
+  const fetchResumesByStatus = async (status) => {
     const token = localStorage.getItem("token");
 
     const cacheBuster = new Date().getTime();
 
     const response = await fetch(
-      `https://api.jinnhire.in/jinnhire/data/requirements/${requirementId}/resumes_by_state_and_user?state=${status}&user_id=${parsedUserData.id}`,
+      `https://api.jinnhire.in/jinnhire/data/requirements/resumes_by_state_and_user?state=${status}&user_id=${parsedUserData.id}`,
       {
         headers: {
           "Content-Type": "application/json",
@@ -420,6 +454,7 @@ const Process = ({ optedInRequirements }) => {
   const handleTabChange = (event, tabIndex) => {
     setSelectedTab(tabIndex);
     fetchProfiles(tabIndex);
+    setLoading(true);
   };
 
   const handleChangePage = (event, newPage) => {
@@ -459,6 +494,23 @@ const Process = ({ optedInRequirements }) => {
   const handleJobDescriptionClick = (jdId) => {
     fetchJD(jdId);
     setJdModalOpen(true);
+  };
+
+  const handleOptInChange = (requirementId) => {
+    setOptedIn((prevOptedIn) => ({
+      ...prevOptedIn,
+      [requirementId]: !prevOptedIn[requirementId],
+    }));
+  };
+
+  const handleMenuOpen = (event, profile) => {
+    setAnchorEl(event.currentTarget);
+    setSelectedProfile(profile);
+  };
+
+  const handleMenuClose = () => {
+    setAnchorEl(null);
+    setSelectedProfile(null);
   };
 
   const fetchJD = async (jdId) => {
@@ -567,7 +619,19 @@ const Process = ({ optedInRequirements }) => {
         }
       );
 
-      // Call the third API to update the candidate processing state
+      // Call the third API to unlock the resume
+      await axios.post(
+        `https://api.jinnhire.in/jinnhire/data/resumes/${resumeData.resume_id}/unlock/`,
+        {},
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Token ${token}`,
+          },
+        }
+      );
+
+      // Call the fourth API to update the candidate processing state
       await axios.put(
         `https://api.jinnhire.in/jinnhire/data/candidate-state-machines/${selectedProfile.candidate_phone_number}/`,
         {
@@ -683,8 +747,7 @@ const Process = ({ optedInRequirements }) => {
       setSeverity("error");
     }
   };
-
-  console.log(optedInRequirements,"OPTED REQID")
+  console.log(optedInRequirements, "OPIn");
   return (
     <ThemeProvider theme={theme}>
       <Container style={{ backgroundColor: "#ffff", boxShadow: "none" }}>
@@ -703,333 +766,365 @@ const Process = ({ optedInRequirements }) => {
             {message}
           </Alert>
         </Snackbar>
-        <Paper sx={{ bgcolor: "#e3f2fd", marginBottom: "20px" }}>
-          <AppBar position="static">
+        
+        <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}></Box>
+
+        <Box sx={{ display: 'flex', height: '60vh' }}>
+          {/* Vertical Tabs */}
+          <Box sx={{ width: '200px', mr: 2 }}>
             <Tabs
+              orientation="vertical"
+              variant="scrollable"
+              value={false}
+              aria-label="Vertical tabs"
+              sx={{
+                borderRadius: '8px',
+                backgroundColor: '#fcfcfc',
+                borderColor: '#e0e0e0',
+                borderStyle: 'solid',
+                borderWidth: '1px',
+                maxHeight:"60vh",
+                color:"black"
+              }}
+            >
+              <Typography variant="h6" sx={{ flexGrow: 1, padding: "20px", fontWeight: 'bold' , backgroundColor:"rgb(28, 66, 109)", color:"white"}}>
+                Requirements
+              </Typography>
+              <Divider />
+              {optedInRequirements.map((requirement, index) => (
+                <React.Fragment key={requirement.requirement_id}>
+                  <Tab
+                    label={
+                      <Box
+                        sx={{
+                          display: "flex",
+                          alignItems: "center",
+                          whiteSpace: "normal",
+                          wordBreak: "break-word",
+                          width: "170px",
+                        }}
+                      >
+                        <Switch
+                          checked={optedIn[requirement.requirement_id] || false}
+                          onChange={() =>
+                            handleOptInChange(requirement.requirement_id)
+                          }
+                          color={optedIn[requirement.requirement_id] ? "primary" : "default"}
+                        />
+                        <Typography variant="body2">
+                          {requirement.requirement_id}
+                        </Typography>
+                      </Box>
+                    }
+                  />
+                  {index < optedInRequirements.length - 1 && <Divider />}
+                </React.Fragment>
+              ))}
+            </Tabs>
+          </Box>
+
+          {/* Table with Horizontal Scroll */}
+          <Box sx={{ flexGrow: 1 ,
+                borderRadius: '8px',
+                backgroundColor: '#fcfcfc',
+                borderColor: '#e0e0e0',
+                borderStyle: 'solid',
+                borderWidth: '1px',
+             }}>
+            {/* Header for Select Dropdown (acts as a table heading) */}
+            {/* <Box sx={{ }}>
+              <FormControl sx={{ width: 300, borderColor: '#e0e0e0', borderStyle: 'solid', borderWidth: '1px', borderRadius: '4px' }}>
+                <Select
+                  labelId="profile-status-select-label"
+                  id="profile-status-select"
+                  value={selectedTab}
+                  onChange={handleTabChange}
+                  sx={{ borderColor: '#e0e0e0' }}
+                >
+                  <MenuItem value={0}>Communication Failed</MenuItem>
+                  <MenuItem value={1}>Suitable Profiles</MenuItem>
+                  <MenuItem value={2}>Profiles Needing Intervention</MenuItem>
+                  <MenuItem value={3}>Unsuccessful Profiles</MenuItem>
+                  <MenuItem value={4}>In-Progress</MenuItem>
+                  <MenuItem value={5}>No-Response</MenuItem>
+                  <MenuItem value={6}>Dormant Profiles</MenuItem>
+                </Select>
+              </FormControl>
+            </Box> */}
+            <Paper sx={{ bgcolor: "#e3f2fd"}}>
+          <AppBar position="static">
+        <Tabs
               value={selectedTab}
               onChange={handleTabChange}
               variant="scrollable"
               aria-label="Profile tabs"
-              sx={{ bgcolor: "#4e8daf" }}
+              sx={{ bgcolor: "#0696cb" }}
             >
+              <Tab label="Communication Failed" />
               <Tab label="Suitable Profiles" />
               <Tab label="Profiles Needing Intervention" />
               <Tab label="Unsuccessful Profiles" />
-              <Tab label="Dormant Profiles" />
               <Tab label="In-Progress" />
               <Tab label="No-Response" />
-              <Tab label="Communication Failed" />
+              <Tab label="Dormant Profiles" />
             </Tabs>
           </AppBar>
         </Paper>
-        <Box sx={{ overflowX: "auto" }}>
-          <Table>
-            <TableHead>
-              <TableRow sx={{ backgroundColor: "#4e8daf", color: "#fff" }}>
-                {tableHeaders[selectedTab].map((header, index) => (
-                  <TableCell
-                    key={index}
-                    sx={{
-                      color: "#fff",
-                      ...(header === "Current Question" && { width: "300px" }),
-                      ...(header === "Actions" && { width: "160px" }),
-                    }}
-                  >
-                    {header}
-                  </TableCell>
-                ))}
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {loading ? (
-                <TableRow>
-                  <TableCell
-                    colSpan={tableHeaders[selectedTab].length}
-                    align="center"
-                  >
-                    <Typography variant="body1" gutterBottom>
-                    <CircularProgress
-                      color="secondary"
-                      size={24}
-                    /> Loading profiles...
-                    </Typography>
-                  </TableCell>
+            <Table size="small" sx={{ borderColor: '#e0e0e0', borderStyle: 'solid', borderWidth: '1px' }}>
+              <TableHead>
+                <TableRow sx={{ backgroundColor: "#4e8daf", color: "#fff" }}>
+                  {tableHeaders[selectedTab].map((header, index) => (
+                    <TableCell
+                      key={index}
+                      sx={{
+                        color: "#fff",
+                        ...(header === "Current Question" && {
+                          width: "300px",
+                        }),
+                        ...(header === "Actions" && { width: "160px" }),
+                      }}
+                    >
+                      {header}
+                    </TableCell>
+                  ))}
                 </TableRow>
-              ) : profiles.length === 0 ? (
-                <TableRow>
-                  <TableCell
-                    colSpan={tableHeaders[selectedTab].length}
-                    align="center"
-                  >
-                    <Typography variant="body1" gutterBottom>
-                      No data available
-                    </Typography>
-                  </TableCell>
-                </TableRow>
-              ) : (
-                profiles
-                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                  .map((profile, index) => (
-                    <React.Fragment>
-                      <TableRow key={profile.candidate_phone_number}>
-                        <TableCell>{index + 1}</TableCell>
-                        <TableCell
-                          onClick={() =>
-                            handleJobDescriptionClick(profile.jd_id)
-                          }
-                          style={{ cursor: "pointer", color: "blue" }}
-                        >
-                          {profile.jd_id || "N/A"}
-                        </TableCell>
-                        {/* <TableCell >
-                        <a href={fileLinks[profile.candidate_phone_number]} target="_blank" rel="noopener noreferrer"> {`${profile.candidate_fname} ${profile.candidate_last_name}` ||
-                            "N/A"} </a>
-                        </TableCell> */}
-                        <TableCell
-                          style={{
-                            padding: "12px 16px",
-                            borderBottom: "1px solid #e0e0e0",
-                          }}
-                        >
-                          <div
-                            style={{ display: "flex", alignItems: "center" }}
-                          >
-                            {`${profile.candidate_fname} ${profile.candidate_last_name}` ||
-                              "N/A"}
-                          </div>
-                        </TableCell>
-
-                        <TableCell>
-                          {profile.candidate_phone_number || "N/A"}
-                        </TableCell>
-                        <TableCell>{profile.emailAddress || "N/A"}</TableCell>
-                        {selectedTab !== 6 && (
-                          <TableCell>{profile.current_question}</TableCell>
-                        )}
-                        {selectedTab === 1 && (
-                          <TableCell>
-                            {profile.reason_for_conversation_stopping || "N/A"}
-                          </TableCell>
-                        )}
-                        {selectedTab === 2 && (
-                          <TableCell>
-                            {profile.reason_for_failure || "N/A"}
-                          </TableCell>
-                        )}
-                        {selectedTab === 3 && (
-                          <TableCell>{profile.waiting_time || "N/A"}</TableCell>
-                        )}
-                        {selectedTab === 4 && (
-                          <>
-                            <TableCell>
-                              {profile.last_follow_up_time || "N/A"}
-                            </TableCell>
-                            <TableCell>
-                              {getDifferenceInMinutesFromIST(
-                                profile.candidate_response_time
-                              ) + " mins" || "N/A"}
-                            </TableCell>
-                          </>
-                        )}
-                        {selectedTab === 5 && (
-                          <TableCell>
-                            {profile.follow_up_count || "N/A"}
-                          </TableCell>
-                        )}
-                        <TableCell>
-                          <Tooltip title="Approve">
-                            <IconButton
-                              color="success"
-                              onClick={() => handleOpenModal(true, profile)}
-                            >
-                              <Check />
-                            </IconButton>
-                          </Tooltip>
-                          <Tooltip title="Reject">
-                            <IconButton
-                              color="error"
-                              onClick={() => handleOpenModal(false, profile)}
-                            >
-                              <Cancel />
-                            </IconButton>
-                          </Tooltip>
-                          <Tooltip
-                            title={
-                              lockStatus[profile.candidate_phone_number]
-                                ? "Unlock"
-                                : "Lock"
+              </TableHead>
+              <TableBody>
+                {loading ? (
+                  <TableRow>
+                    <TableCell
+                      colSpan={tableHeaders[selectedTab].length}
+                      align="center"
+                    >
+                      <Typography variant="body1" gutterBottom>
+                        <CircularProgress color="secondary" size={24} /> Loading profiles...
+                      </Typography>
+                    </TableCell>
+                  </TableRow>
+                ) : profiles.length === 0 ? (
+                  <TableRow>
+                    <TableCell
+                      colSpan={tableHeaders[selectedTab].length}
+                      align="center"
+                    >
+                      <Typography variant="body1" gutterBottom>
+                        No data available
+                      </Typography>
+                    </TableCell>
+                  </TableRow>
+                ) : (
+                  profiles
+                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                    .map((profile, index) => (
+                      <React.Fragment key={profile.candidate_phone_number}>
+                        <TableRow>
+                          <TableCell>{index + 1}</TableCell>
+                          <TableCell
+                            onClick={() =>
+                              handleJobDescriptionClick(profile.jd_id)
                             }
+                            style={{ cursor: "pointer", color: "blue" }}
                           >
-                            <IconButton
-                              onClick={() =>
-                                handleLockUnlock(
-                                  profile.candidate_phone_number,
-                                  profile.phone,
-                                  lockStatus[profile.candidate_phone_number]
-                                )
-                              }
-                            >
-                              {lockStatus[profile.candidate_phone_number] ? (
-                                <Lock color="action" />
-                              ) : (
-                                <LockOpen />
+                            {profile.jd_id || "N/A"}
+                          </TableCell>
+                          <TableCell
+                            style={{
+                              padding: "12px 16px",
+                              borderBottom: "1px solid #e0e0e0",
+                            }}
+                          >
+                            <div style={{ display: "flex", alignItems: "center" }}>
+                              {`${profile.candidate_fname} ${profile.candidate_last_name}` || "N/A"}
+                            </div>
+                          </TableCell>
+                          <TableCell>
+                            {profile.candidate_phone_number || "N/A"}
+                          </TableCell>
+                          {selectedTab === 0 && (
+                            <TableCell>
+                              {profile.remarks && profile.remarks.length > 0 ? profile.remarks : "N/A"}
+                            </TableCell>
+                          )}
+                          {selectedTab === 0 && (
+                            <TableCell>
+                              {profile.skills && (
+                                <Accordion sx={{ boxShadow: "none", margin: 0 }}>
+                                  <AccordionSummary
+                                    expandIcon={<ExpandMore />}
+                                    sx={{
+                                      minHeight: "auto",
+                                      "& .MuiAccordionSummary-content": {
+                                        margin: 0,
+                                      },
+                                    }}
+                                  >
+                                    <Typography variant="body2">View Skills</Typography>
+                                  </AccordionSummary>
+                                  <AccordionDetails sx={{ padding: 0 }}>
+                                    <Table size="small">
+                                      <TableHead>
+                                        <TableRow>
+                                          <TableCell>Skill</TableCell>
+                                          <TableCell>Occurrence</TableCell>
+                                        </TableRow>
+                                      </TableHead>
+                                      <TableBody>
+                                        {Object.entries(profile.skills).map(
+                                          ([skill, occurrence], skillIndex) => (
+                                            <TableRow key={skillIndex}>
+                                              <TableCell>{skill}</TableCell>
+                                              <TableCell>{occurrence}</TableCell>
+                                            </TableRow>
+                                          )
+                                        )}
+                                      </TableBody>
+                                    </Table>
+                                  </AccordionDetails>
+                                </Accordion>
                               )}
+                            </TableCell>
+                          )}
+                          {selectedTab !== 0 && (
+                            <TableCell>{profile.current_question}</TableCell>
+                          )}
+                          {selectedTab !== 0 && (
+                            <>
+                              <TableCell>
+                                {profile.questions_asked_count || "N/A"}
+                              </TableCell>
+                              <TableCell>
+                                {profile.answer_count || "N/A"}
+                              </TableCell>
+                              <TableCell>
+                                {profile.unanswered_question_count || "N/A"}
+                              </TableCell>
+                            </>
+                          )}
+                          {selectedTab === 3 && (
+                            <TableCell>{profile.reason || "N/A"}</TableCell>
+                          )}
+                          <TableCell>
+                            <IconButton
+                              onClick={(event) => handleMenuOpen(event, profile)}
+                            >
+                              <MoreVert />
                             </IconButton>
-                          </Tooltip>
-                          {fileLinks[profile.candidate_phone_number] && (
-                            <Tooltip title="Download Resume">
-                              <IconButton
-                                color="info"
+                            <Menu
+                              anchorEl={anchorEl}
+                              open={Boolean(anchorEl && selectedProfile === profile)}
+                              onClose={handleMenuClose}
+                            >
+                              <MenuActionItem
                                 onClick={() => {
                                   const fileLink =
+                                    profile.file_link ||
                                     fileLinks[profile.candidate_phone_number];
                                   if (fileLink) {
                                     window.open(fileLink, "_blank");
                                   } else {
                                     console.error("File link is not available");
-                                    // Optionally, you can show a message or handle this case
                                   }
+                                  handleMenuClose();
+                                }}
+                
+                              >
+                                <Tooltip title="Download Resume" placement="top">
+                                  <Download fontSize="small" color="primary"/>
+                                </Tooltip>
+                                Download Resume
+                              </MenuActionItem>
+                              <MenuActionItem
+                                onClick={() => {
+                                  handleLockUnlock(profile);
+                                  handleMenuClose();
                                 }}
                               >
-                                <Download />
-                              </IconButton>
-                            </Tooltip>
-                          )}
-                        </TableCell>
-                        {selectedTab !== 6 && (
-                          <TableCell>
+                                <Tooltip
+                                  title={lockStatus[profile.candidate_phone_number] ? "Unlock" : "Lock"}
+                                  placement="top"
+                                >
+                                  {profile.locked ? (
+                                    <LockOpen fontSize="small" color="primary" />
+                                  ) : (
+                                    <Lock fontSize="small" />
+                                  )}
+                                </Tooltip>
+                               {lockStatus[profile.candidate_phone_number] ? "Unlock" : "Lock"}
+                              </MenuActionItem>
+                              <MenuActionItem onClick={handleMenuClose}>
+                                <Tooltip title="Close" placement="top">
+                                  <Cancel fontSize="small" color="error" />
+                                </Tooltip>
+                                Close
+                              </MenuActionItem>
+                            </Menu>
+                          </TableCell>
+                          {/* <TableCell>
+                            {profile.file_link ||
+                                fileLinks[profile.candidate_phone_number] .some(
+                              (link) =>
+                                link.profile_id === profile.profile_id
+                            ) ? (
+                              <Check color="success" />
+                            ) : (
+                              <Cancel color="error" />
+                            )}
+                          </TableCell> */}
+                          {/* <TableCell>
                             <Accordion
-                              expanded={expandedAccordion === index + 1}
-                              onChange={() => handleAccordionChange(index + 1)}
+                              expanded={expandedAccordion === profile.profile_id}
+                              onChange={() =>
+                                handleAccordionChange(profile.profile_id)
+                              }
+                              sx={{
+                                boxShadow: "none",
+                                "&:before": { display: "none" },
+                              }}
                             >
-                              <AccordionSummary expandIcon={<RemoveRedEye />}>
-                                View
-                              </AccordionSummary>
+                              <AccordionSummary
+                                expandIcon={<ExpandMore />}
+                                sx={{
+                                  minHeight: "auto",
+                                  padding: "0",
+                                  "& .MuiAccordionSummary-content": {
+                                    margin: 0,
+                                  },
+                                }}
+                              />
+                              <AccordionDetails sx={{ padding: "0" }}>
+                                <Box
+                                  sx={{
+                                    backgroundColor: "#f5f5f5",
+                                    borderTop: "1px solid #ddd",
+                                  }}
+                                >
+                                  {parseQuestionsList(profile.questions_list)}
+                                </Box>
+                              </AccordionDetails>
                             </Accordion>
-                          </TableCell>
-                        )}
-                      </TableRow>
-                      {selectedTab !== 6 && (
-                        <TableRow>
-                          <TableCell
-                            style={{ paddingBottom: 0, paddingTop: 0 }}
-                            colSpan={10}
-                          >
-                            <Collapse in={expandedAccordion}>
-                              <Box sx={{ margin: 1 }}>
-                                <Typography variant="h6">
-                                  Questions List
-                                </Typography>
-                                <Table>
-                                  <TableHead>
-                                    <TableRow>
-                                      <TableCell>SNO</TableCell>
-                                      <TableCell>Question</TableCell>
-                                      <TableCell>Answer</TableCell>
-                                    </TableRow>
-                                  </TableHead>
-                                  <TableBody>
-                                    {parseQuestionsList(
-                                      profile.questions_list
-                                    ).map((question, qIndex) => (
-                                      <TableRow key={qIndex}>
-                                        <TableCell>{qIndex + 1}</TableCell>
-                                        <TableCell>
-                                          {question.question}
-                                        </TableCell>
-                                        <TableCell>{question.answer}</TableCell>
-                                      </TableRow>
-                                    ))}
-                                  </TableBody>
-                                </Table>
-                              </Box>
-                            </Collapse>
-                          </TableCell>
+                          </TableCell> */}
                         </TableRow>
-                      )}
-                    </React.Fragment>
-                  ))
-              )}
-            </TableBody>
-          </Table>
+                      </React.Fragment>
+                    ))
+                )}
+              </TableBody>
+            </Table>
 
-          <TablePagination
-            rowsPerPageOptions={[5, 10, 25]}
-            component="div"
-            count={profiles.length}
-            rowsPerPage={rowsPerPage}
-            page={page}
-            onPageChange={handleChangePage}
-            onRowsPerPageChange={handleChangeRowsPerPage}
-          />
+            {/* Table Pagination */}
+            <TablePagination
+              rowsPerPageOptions={[5, 10, 25]}
+              component="div"
+              count={profiles.length}
+              rowsPerPage={rowsPerPage}
+              page={page}
+              onPageChange={handleChangePage}
+              onRowsPerPageChange={handleChangeRowsPerPage}
+            />
+          </Box>
         </Box>
       </Container>
-      <Modal
-        open={modalOpen}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
-        <Box sx={modalStyle}>
-          <Typography id="modal-modal-title" variant="h6" component="h2">
-            Candidate Evaluation
-          </Typography>
-          <Box sx={checkboxContainerStyle}>
-            {modalContent.map((option, index) => (
-              <FormControlLabel
-                key={index}
-                control={
-                  <Checkbox
-                    sx={option.style}
-                    checked={selectedOptions.includes(option.text)}
-                    onChange={(e) =>
-                      handleCheckboxChange(option.text, e.target.checked)
-                    }
-                  />
-                }
-                label={option.text}
-              />
-            ))}
-          </Box>
-          <Box sx={buttonContainerStyle}>
-            <Button
-              onClick={handleSubmit}
-              variant="contained"
-              color="success"
-              sx={{ mt: 3 }}
-            >
-              Submit
-            </Button>
-            <Button
-              onClick={handleCloseModal}
-              variant="contained"
-              color="error"
-              sx={{ mt: 3 }}
-            >
-              Close
-            </Button>
-          </Box>
-        </Box>
-      </Modal>
-      <Dialog open={jdModalOpen} scroll="paper" maxWidth="md" fullWidth>
-        <DialogTitle>Job Description</DialogTitle>
-        <DialogContent dividers>
-          <Box sx={{ whiteSpace: "pre-wrap" }}>
-            <Typography variant="body1" gutterBottom>
-              {jdContent}
-            </Typography>
-          </Box>
-        </DialogContent>
-        <DialogActions>
-          <Button
-            onClick={handleCloseJdModal}
-            color="error"
-            variant="contained"
-          >
-            Close
-          </Button>
-        </DialogActions>
-      </Dialog>
     </ThemeProvider>
+    
   );
 };
 
