@@ -50,8 +50,6 @@ import {
   Avatar,
   RadioGroup,
   Radio,
-  Chip,
-  Grid,
 } from "@mui/material";
 import {
   CheckCircle,
@@ -64,23 +62,10 @@ import {
   Download,
   DownloadDone,
   MoreVert,
-  SkipNext,
-  Visibility,
-  VisibilityRounded,
-  DescriptionSharp,
-  WorkOutline,
 } from "@mui/icons-material";
 import axios from "axios";
 import { AppContext } from "./AppContext";
 import { grey, blue, green, red } from "@mui/material/colors";
-import PersonIcon from "@mui/icons-material/Person";
-import PhoneIcon from "@mui/icons-material/Phone";
-import EmailIcon from "@mui/icons-material/Email";
-import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
-import EventNoteIcon from "@mui/icons-material/EventNote";
-import LocationOnIcon from "@mui/icons-material/LocationOn";
-import WorkIcon from "@mui/icons-material/Work";
-
 // Define a custom theme
 const theme = createTheme({
   palette: {
@@ -403,6 +388,7 @@ const Process = ({ optedInRequirements, handleToggle }) => {
     }
   };
 
+  
   useEffect(() => {
     if (initialRender.current) {
       // Call fetchProfiles only once on initial render
@@ -425,6 +411,7 @@ const Process = ({ optedInRequirements, handleToggle }) => {
     }
   }, [profiles]);
 
+
   const fetchCommunicationFailedProfiles = async (jdId) => {
     const token = localStorage.getItem("token");
     const cacheBuster = new Date().getTime();
@@ -434,7 +421,7 @@ const Process = ({ optedInRequirements, handleToggle }) => {
       //   "communication_failed"
       // );
 
-      const resumesResponse = await (resumeAssignmentStrategy === "pool_based"
+      const resumesResponse = await (resumeAssignmentStrategy !== "pool_based"
         ? fetchResumesByStatus("communication_failed")
         : fetchResumesFromPool());
 
@@ -556,6 +543,8 @@ const Process = ({ optedInRequirements, handleToggle }) => {
       throw error;
     }
   };
+
+
 
   const handleTabChange = (event, tabIndex) => {
     if (selectedTab !== tabIndex) {
@@ -969,553 +958,420 @@ const Process = ({ optedInRequirements, handleToggle }) => {
         </Snackbar>
 
         <Box sx={{ display: "flex", "min-height": "60vh" }}>
-          {/* Collapsible and Scrollable Vertical Tabs */}
-          <Box sx={{ width: "240px", mr: 2 }}>
-            <Paper
+          {/* Vertical Tabs */}
+          <Box sx={{ width: "200px", mr: 2 }}>
+            <Tabs
+              orientation="vertical"
+              variant="scrollable"
+              value={false}
+              aria-label="Vertical tabs"
               sx={{
                 borderRadius: "8px",
                 backgroundColor: "#fcfcfc",
-                overflow: "hidden",
+                borderColor: "#e0e0e0",
+                borderStyle: "solid",
+                borderWidth: "1px",
                 maxHeight: "60vh",
-                position: "relative",
+                color: "black",
               }}
             >
               <Typography
                 variant="h6"
                 sx={{
-                  position: "sticky",
-                  top: 0,
-                  zIndex: 1,
-                  padding: "15px",
+                  flexGrow: 1,
+                  padding: "20px",
                   fontWeight: "bold",
                   backgroundColor: "rgb(28, 66, 109)",
                   color: "white",
-                  cursor: "pointer",
-                  borderBottom: "1px solid #ddd",
                 }}
               >
                 Requirements
               </Typography>
-              <Box
-                sx={{
-                  overflowY: "auto",
-                  maxHeight: "calc(60vh - 70px)",
-                  padding: "0 16px",
-                }}
-              >
-                {optedInRequirements
-                  .filter((requirement) => requirement.active)
-                  .concat(
-                    optedInRequirements.filter(
-                      (requirement) => !requirement.active
-                    )
+              <Divider />
+              {optedInRequirements
+                .filter((requirement) => requirement.active) // Filter opted-in requirements first
+                .concat(
+                  optedInRequirements.filter(
+                    (requirement) => !requirement.active
                   )
-                  .map((requirement, index) => (
-                    <div key={requirement.requirement_id}>
-                      <Box
-                        sx={{
-                          display: "flex",
-                          alignItems: "center",
-                          whiteSpace: "normal",
-                          wordBreak: "break-word",
-                          width: "170px",
-                          padding: 1,
-                          "&:hover": {
-                            backgroundColor: "#f5f5f5",
-                            cursor: "pointer",
-                          },
-                        }}
-                      >
-                        <Switch
-                          checked={requirement.active || false}
-                          onChange={(event) => handleToggle(requirement, event)}
-                          color={requirement.active ? "success" : "error"}
-                          size="small"
-                        />
-                        <Typography variant="body2">
-                          {requirement.requirement_id}
-                        </Typography>
-                      </Box>
-                      {index < optedInRequirements.length - 1 && <Divider />}
-                    </div>
-                  ))}
-              </Box>
-            </Paper>
+                ) // Concatenate non-opted-in requirements
+                .map((requirement, index) => (
+                  <div key={requirement.requirement_id}>
+                    <Tab
+                      label={
+                        <Box
+                          sx={{
+                            display: "flex",
+                            alignItems: "center",
+                            whiteSpace: "normal",
+                            wordBreak: "break-word",
+                            width: "170px",
+                          }}
+                        >
+                          <span>
+                            <Switch
+                              checked={requirement.active || false}
+                              onChange={(event) =>
+                                handleToggle(requirement, event)
+                              }
+                              color={
+                                requirement.active
+                                  ? "success"
+                                  : requirement.users_opted.length >= 5
+                                  ? "text.disabled"
+                                  : "error"
+                              }
+                              size="small"
+                              disabled={
+                                requirement.users_opted.length >= 5 &&
+                                !requirement.active
+                              }
+                            />
+                          </span>
+
+                          <Typography variant="body2">
+                            {requirement.requirement_id}
+                          </Typography>
+                        </Box>
+                      }
+                    />
+                    {index < optedInRequirements.length - 1 && <Divider />}
+                  </div>
+                ))}
+            </Tabs>
           </Box>
 
           {/* Table with Horizontal Scroll */}
-          {resumeAssignmentStrategy === "pool_based" ? (
-           <Box>
-           {/* Add your pool based specific UI here */}
-           {/* Main Content */}
-           <Box
-             sx={{
-               flexGrow: 6,
-               borderRadius: "16px",
-               backgroundColor: "#fcfcfc",
-               borderColor: "#e0e0e0",
-               borderStyle: "solid",
-               borderWidth: "1px",
-               minWidth: "65vw",
-             }}
-           >
-             {/* Action Headers */}
-             <Box
-               sx={{
-                 p: 1,
-                 m: 1,
-                 border: "1px solid #ddd",
-                 borderRadius: 2,
-                 boxShadow: 2,
-               }}
-             >
-               <Box
-                 sx={{
-                   display: "flex",
-                   justifyContent: "space-between",
-                   alignItems: "center",
-                   mb: 1,
-                 }}
-               >
-                 <Box sx={{ display: "flex", alignItems: "center" }}></Box>
-                 <Chip
-                   label="COMMUNICATION FAILED"
-                   color="warning"
-                   size="small"
-                 />
-               </Box>
+          {resumeAssignmentStrategy !== "pool_based" ? (
+            <Box>
+              {/* Add your pool based specific UI here */}
+              <Paper sx={{ bgcolor: "#e3f2fd", marginBottom: "20px" }}>
+                <AppBar position="static">
+                  <Tabs
+                    value={selectedTab}
+                    onChange={handleTabChange}
+                    variant="scrollable"
+                    aria-label="Profile tabs"
+                    sx={{ bgcolor: "#4e8daf" }}
+                  >
+                    <Tab label="Communication Failed" />
+                    <Tab label="Suitable Profiles" />
+                    <Tab label="Profiles Needing Intervention" />
+                    <Tab label="Unsuccessful Profiles" />
+                    <Tab label="In-Progress" />
+                    <Tab label="No-Response" />
+                    <Tab label="Dormant Profiles" />
+                  </Tabs>
+                </AppBar>
+              </Paper>
+              <Box sx={{ overflowX: "auto" }}>
+                <Table>
+                  {renderTableHeader()}
+                  <TableBody>
+                    {loading
+                      ? renderLoadingRow()
+                      : profiles.length === 0
+                      ? renderNoDataRow()
+                      : profiles
+                          .slice(
+                            page * rowsPerPage,
+                            page * rowsPerPage + rowsPerPage
+                          )
+                          .map((profile, index) => (
+                            <>
+                              <TableRow key={profile.candidate_phone_number}>
+                                <TableCell>{index + 1}</TableCell>
+                                <TableCell
+                                  onClick={() =>
+                                    handleJobDescriptionClick(profile.jd_id)
+                                  }
+                                  style={{ cursor: "pointer", color: "blue" }}
+                                >
+                                  {profile.jd_id || "N/A"}
+                                </TableCell>
+                                <TableCell
+                                  style={{
+                                    padding: "12px 16px",
+                                    borderBottom: "1px solid #e0e0e0",
+                                  }}
+                                >
+                                  <div
+                                    style={{
+                                      display: "flex",
+                                      alignItems: "center",
+                                    }}
+                                  >
+                                    {`${profile.candidate_fname} ${profile.candidate_last_name}` ||
+                                      "N/A"}
+                                  </div>
+                                </TableCell>
 
-               <Box sx={{ mb: 1 }}>
-                 <Grid container spacing={2}>
-                   <Grid item xs={12} sm={4}>
-                     {/* New grid item for job icon */}
-                     <Box display="flex" alignItems="center">
-                       <img
-                         src="./briefcase__2_.png"
-                         height={50}
-                         width={50}
-                         alt="Briefcase"
-                       />
-                     </Box>
-                     <Typography variant="subtitle1" sx={{ mr: 1 }}>
-                       <span style={{ color: "inherit" }}>
-                         Requirement ID
-                       </span>
-                     </Typography>
-                   </Grid>
-                   <Grid item xs={12} sm={4}>
-                     <Box display="flex" alignItems="center" mb={1}>
-                       <PersonIcon sx={{ mr: 1, color: "#0666a0" }} />
-                       <Typography variant="body2">John Doe</Typography>
-                     </Box>
-                     <Box display="flex" alignItems="center" mb={1}>
-                       <PhoneIcon sx={{ mr: 1, color: "#0666a0" }} />
-                       <Typography variant="body2">
-                         (123) 456-7890
-                       </Typography>
-                     </Box>
-                     <Box display="flex" alignItems="center" mb={1}>
-                       <EmailIcon sx={{ mr: 1, color: "#0666a0" }} />
-                       <Typography variant="body2">
-                         john.doe@example.com
-                       </Typography>
-                     </Box>
-                   </Grid>
-                   <Grid item xs={12} sm={4}>
-                     <Box display="flex" alignItems="center" mb={1}>
-                       <AttachMoneyIcon sx={{ mr: 1, color: "#0666a0" }} />
-                       <Typography variant="body2">$80,000</Typography>
-                     </Box>
-                     <Box display="flex" alignItems="center" mb={1}>
-                       <EventNoteIcon sx={{ mr: 1, color: "#0666a0" }} />
-                       <Typography variant="body2">2 weeks</Typography>
-                     </Box>
-                     <Box display="flex" alignItems="center" mb={1}>
-                       <LocationOnIcon sx={{ mr: 1, color: "#0666a0" }} />
-                       <Typography variant="body2">New York, NY</Typography>
-                     </Box>
-                   </Grid>
-                 </Grid>
-               </Box>
-               <Box
-                 sx={{
-                   display: "flex",
-                   justifyContent: "flex-end",
-                   gap: 0.5,
-                   p: 0.5,
-                 }}
-               >
-                 <Button
-                   variant="contained"
-                   color="success"
-                   size="small"
-                   sx={{
-                     "&:hover": {
-                       backgroundColor: "success.light",
-                     },
-                     fontSize: "0.75rem",
-                     padding: "3px 8px",
-                   }}
-                 >
-                   Approve
-                 </Button>
-                 <Button
-                   variant="contained"
-                   color="error"
-                   size="small"
-                   sx={{
-                     "&:hover": {
-                       backgroundColor: "error.light",
-                     },
-                     fontSize: "0.75rem",
-                     padding: "3px 8px",
-                   }}
-                 >
-                   Reject
-                 </Button>
-                 <Button
-                   variant="outlined"
-                   color="secondary"
-                   size="small"
-                   sx={{
-                     "&:hover": {
-                       borderColor: "secondary.light",
-                       color: "secondary.light",
-                     },
-                     fontSize: "0.75rem",
-                     padding: "3px 8px",
-                   }}
-                 >
-                   Skip
-                 </Button>
-               </Box>
-             </Box>
+                                <TableCell>
+                                  {profile.candidate_phone_number || "N/A"}
+                                </TableCell>
+                                {selectedTab === 0 && (
+                                  <TableCell>
+                                    {profile.remarks &&
+                                    profile.remarks.length > 0
+                                      ? profile.remarks
+                                      : "N/A"}
+                                  </TableCell>
+                                )}
+                                {selectedTab === 0 && (
+                                  <TableCell>
+                                    {profile.skills && (
+                                      <Accordion
+                                        sx={{ boxShadow: "none", margin: 0 }}
+                                      >
+                                        <AccordionSummary
+                                          expandIcon={<ExpandMore />}
+                                          sx={{
+                                            minHeight: "auto",
+                                            "& .MuiAccordionSummary-content": {
+                                              margin: 0,
+                                            },
+                                          }}
+                                        >
+                                          <Typography variant="body2">
+                                            {" "}
+                                            View Skills
+                                          </Typography>
+                                        </AccordionSummary>
+                                        <AccordionDetails sx={{ padding: 0 }}>
+                                          <Table size="small">
+                                            <TableHead>
+                                              <TableRow>
+                                                <TableCell>Skill</TableCell>
+                                                <TableCell>
+                                                  Occurrence
+                                                </TableCell>
+                                              </TableRow>
+                                            </TableHead>
+                                            <TableBody>
+                                              {Object.entries(
+                                                profile.skills
+                                              ).map(
+                                                (
+                                                  [skill, occurrence],
+                                                  skillIndex
+                                                ) => (
+                                                  <TableRow key={skillIndex}>
+                                                    <TableCell>
+                                                      {skill}
+                                                    </TableCell>
+                                                    <TableCell>
+                                                      {occurrence}
+                                                    </TableCell>
+                                                  </TableRow>
+                                                )
+                                              )}
+                                            </TableBody>
+                                          </Table>
+                                        </AccordionDetails>
+                                      </Accordion>
+                                    )}
+                                  </TableCell>
+                                )}
+                                {selectedTab !== 0 && (
+                                  <TableCell>
+                                    {profile.current_question}
+                                  </TableCell>
+                                )}
+                                {selectedTab === 1 && (
+                                  <TableCell>
+                                    {profile.reason_for_conversation_stopping ||
+                                      "N/A"}
+                                  </TableCell>
+                                )}
+                                {selectedTab === 2 && (
+                                  <TableCell>
+                                    {profile.reason_for_failure || "N/A"}
+                                  </TableCell>
+                                )}
+                                {selectedTab === 3 && (
+                                  <TableCell>
+                                    {profile.waiting_time || "N/A"}
+                                  </TableCell>
+                                )}
+                                {selectedTab === 4 && (
+                                  <>
+                                    <TableCell>
+                                      {profile.last_follow_up_time || "N/A"}
+                                    </TableCell>
+                                    <TableCell>
+                                      {getDifferenceInMinutesFromIST(
+                                        profile.candidate_response_time
+                                      ) + " mins" || "N/A"}
+                                    </TableCell>
+                                  </>
+                                )}
+                                {selectedTab === 5 && (
+                                  <TableCell>
+                                    {profile.follow_up_count || "N/A"}
+                                  </TableCell>
+                                )}
+                                <TableCell>
+                                  {!lockStatus[
+                                    profile.candidate_phone_number
+                                  ] ? (
+                                    <Tooltip title="Lock to Approve or Reject">
+                                      <IconButton disabled>
+                                        <Check />
+                                      </IconButton>
+                                      <IconButton disabled>
+                                        <Cancel />
+                                      </IconButton>
+                                    </Tooltip>
+                                  ) : (
+                                    <>
+                                      <Tooltip title="Approve">
+                                        <IconButton
+                                          color="success"
+                                          onClick={() =>
+                                            handleOpenModal(true, profile)
+                                          }
+                                        >
+                                          <Check />
+                                        </IconButton>
+                                      </Tooltip>
+                                      <Tooltip title="Reject">
+                                        <IconButton
+                                          color="error"
+                                          onClick={() =>
+                                            handleOpenModal(false, profile)
+                                          }
+                                        >
+                                          <Cancel />
+                                        </IconButton>
+                                      </Tooltip>
+                                    </>
+                                  )}
+                                  <Tooltip
+                                    title={
+                                      lockStatus[profile.candidate_phone_number]
+                                        ? "Unlock"
+                                        : "Lock"
+                                    }
+                                  >
+                                    <IconButton
+                                      onClick={() =>
+                                        handleLockUnlock(
+                                          profile.candidate_phone_number,
+                                          profile.phone,
+                                          lockStatus[
+                                            profile.candidate_phone_number
+                                          ]
+                                        )
+                                      }
+                                    >
+                                      {lockStatus[
+                                        profile.candidate_phone_number
+                                      ] ? (
+                                        <Lock color="action" />
+                                      ) : (
+                                        <LockOpen />
+                                      )}
+                                    </IconButton>
+                                  </Tooltip>
 
-             {/* Comments Section */}
-             <Box sx={{ display: "flex", gap: 2, padding: 2 }}>
-               <Paper
-                 sx={{
-                   flex: 1,
-                   padding: 1,
-                   // border: "1px solid #ddd",
-                   // borderRadius: 2,
-                   // boxShadow: 2,
-                 }}
-               >
-                 <Typography
-                   variant="h6"
-                   sx={{
-                     mb: 1,
-                     fontWeight: "bold",
-                     backgroundColor: "#0d619f",
-                     color: "white",
-                     padding: "5px",
-                     borderRadius: "8px",
-                   }}
-                 >
-                   Remarks
-                 </Typography>
-                 <Typography
-                   variant="body2"
-                   sx={{
-                     marginTop: "5px",
-                     color: "text.secondary",
-                     fontSize: "0.75rem",
-                   }}
-                 >
-                   {/* Content for Remarks */}
-                 </Typography>
-               </Paper>
+                                  <Tooltip title="Download Resume">
+                                    <IconButton
+                                      color="info"
+                                      onClick={() => {
+                                        const fileLink =
+                                          profile.file_link ||
+                                          fileLinks[
+                                            profile.candidate_phone_number
+                                          ];
+                                        if (fileLink) {
+                                          window.open(fileLink, "_blank");
+                                        } else {
+                                          console.error(
+                                            "File link is not available"
+                                          );
+                                        }
+                                      }}
+                                    >
+                                      <Download />
+                                    </IconButton>
+                                  </Tooltip>
+                                </TableCell>
 
-               <Paper
-                 sx={{
-                   flex: 1,
-                   padding: 1,
-                   border: "1px solid #ddd",
-                   borderRadius: 2,
-                   boxShadow: 2,
-                   overflowY: "auto",
-                   maxHeight: "200px",
-                   position: "relative",
-                 }}
-               >
-                 <Typography
-                   variant="h6"
-                   sx={{
-                     mb: 1,
-                     fontWeight: "bold",
-                     backgroundColor: "#0d619f",
-                     color: "white",
-                     padding: "5px",
-                     borderRadius: "8px",
-                     position: "sticky",
-                     top: 0,
-                     zIndex: 1,
-                   }}
-                 >
-                   Comments
-                 </Typography>
-                 {loadingComments ? (
-                   <Typography
-                     variant="body1"
-                     sx={{ color: "text.primary", fontSize: "0.75rem" }}
-                   >
-                     Loading...
-                   </Typography>
-                 ) : comments.length === 0 ? (
-                   <Typography
-                     variant="body1"
-                     sx={{ color: "text.secondary", fontSize: "0.75rem" }}
-                   >
-                     No Comments
-                   </Typography>
-                 ) : (
-                   comments.map((comment, cIndex) => (
-                     <Box
-                       key={cIndex}
-                       display="flex"
-                       alignItems="flex-start"
-                       mb={0.5}
-                       p={0.5}
-                       borderRadius="10px"
-                       border={1}
-                       borderColor="divider"
-                       sx={{ fontSize: "0.75rem" }} // Smaller text size
-                     >
-                       <Avatar
-                         sx={{
-                           bgcolor: "#3a6db7",
-                           mr: 1,
-                           width: 24,
-                           height: 24, // Smaller avatar size
-                         }}
-                       />
-                       <Box sx={{ flexGrow: 1 }}>
-                         <Box
-                           display="flex"
-                           justifyContent="space-between"
-                           mb={0.5}
-                         >
-                           <Typography
-                             variant="subtitle1"
-                             sx={{
-                               fontWeight: "medium",
-                               fontSize: "0.75rem",
-                             }}
-                           >
-                             {formatRecruiterName(comment.recruiter_name)}
-                           </Typography>
-                           <Typography
-                             variant="caption"
-                             color="textSecondary"
-                             sx={{ fontSize: "0.6rem" }}
-                           >
-                             {new Date(comment.created_at).toLocaleString()}
-                           </Typography>
-                         </Box>
-                         <Typography
-                           variant="body2"
-                           sx={{ lineHeight: 1.2, fontSize: "0.75rem" }}
-                         >
-                           {comment.comment}
-                         </Typography>
-                       </Box>
-                     </Box>
-                   ))
-                 )}
-               </Paper>
-             </Box>
-             {/* Skills and JD Details */}
+                                {selectedTab !== 0 && (
+                                  <TableCell>
+                                    <Accordion
+                                      expanded={expandedAccordion === index + 1}
+                                      onChange={() =>
+                                        handleAccordionChange(index + 1)
+                                      }
+                                    >
+                                      <AccordionSummary
+                                        expandIcon={<RemoveRedEye />}
+                                      >
+                                        View
+                                      </AccordionSummary>
+                                    </Accordion>
+                                  </TableCell>
+                                )}
+                              </TableRow>
+                              {selectedTab !== 0 && (
+                                <TableRow>
+                                  <TableCell
+                                    style={{ paddingBottom: 0, paddingTop: 0 }}
+                                    colSpan={10}
+                                  >
+                                    <Collapse in={expandedAccordion}>
+                                      <Box sx={{ margin: 1 }}>
+                                        <Typography variant="h6">
+                                          Questions List
+                                        </Typography>
+                                        <Table>
+                                          <TableHead>
+                                            <TableRow>
+                                              <TableCell>SNO</TableCell>
+                                              <TableCell>Question</TableCell>
+                                              <TableCell>Answer</TableCell>
+                                            </TableRow>
+                                          </TableHead>
+                                          <TableBody>
+                                            {parseQuestionsList(
+                                              profile.questions_list
+                                            ).map((question, qIndex) => (
+                                              <TableRow key={qIndex}>
+                                                <TableCell>
+                                                  {qIndex + 1}
+                                                </TableCell>
+                                                <TableCell>
+                                                  {question.question}
+                                                </TableCell>
+                                                <TableCell>
+                                                  {question.answer}
+                                                </TableCell>
+                                              </TableRow>
+                                            ))}
+                                          </TableBody>
+                                        </Table>
+                                      </Box>
+                                    </Collapse>
+                                  </TableCell>
+                                </TableRow>
+                              )}
+                            </>
+                          ))}
+                  </TableBody>
+                </Table>
 
-             <Box sx={{ padding: 2 }}>
-               {/* Section: What are we looking in the candidate? */}
-               <Box
-                 sx={{
-                   display: "flex",
-                   alignItems: "center",
-                   mb: 2,
-                 }}
-               >
-                 <Typography
-                   variant="h6"
-                   sx={{
-                     fontWeight: "bold",
-                     backgroundColor: "#0d619f",
-                     color: "white",
-                     padding: "5px",
-                     borderRadius: "8px",
-                     flex: 1,
-                   }}
-                 >
-                   What are we looking in the candidate?
-                 </Typography>
-               </Box>
-
-               {/* Content for JD Details */}
-               <Typography
-                 variant="body2"
-                 sx={{
-                   marginTop: "10px",
-                   color: "text.secondary",
-                   marginBottom: "20px",
-                 }}
-               >
-                 {/* {profile.jd_details} */}
-               </Typography>
-
-               {/* Skills Section */}
-               {/* Skills Section */}
-               <Box
-                 sx={{
-                   display: "flex",
-                   justifyContent: "space-between",
-                   alignItems: "center",
-                   mb: 2,
-                 }}
-               >
-                 <Typography variant="h5" sx={{ mb: 2, fontWeight: "bold" }}>
-                   Skills
-                 </Typography>
-                 <Box sx={{ display: "flex", gap: 1 }}>
-                   <Button
-                     variant="outlined"
-                     size="small"
-                     startIcon={<VisibilityRounded />}
-                     sx={{
-                       backgroundColor: "#0d619f",
-                       color: "white",
-                       "&:hover": { backgroundColor: "rgb(28 66, 109)" },
-                     }}
-                   >
-                     View JD
-                   </Button>
-                   <Button
-                     variant="outlined"
-                     size="small"
-                     startIcon={<DescriptionSharp />}
-                     sx={{
-                       backgroundColor: "#0d619f",
-                       color: "white",
-                       "&:hover": { backgroundColor: "rgb(28 66, 109)" },
-                     }}
-                   >
-                     View Resume
-                   </Button>
-                 </Box>
-               </Box>
-
-               {/* Skill Chips */}
-               {profiles
-                 .filter((_, index) => index === 1)
-                 .map(
-                   (profile, index) =>
-                     profile.skills && (
-                       <div key={index} style={{ marginBottom: "16px" }}>
-                         <Box
-                           sx={{
-                             display: "flex",
-                             flexWrap: "wrap",
-                             gap: 1,
-                           }}
-                         >
-                           {Object.entries(profile.skills).map(
-                             ([skill, occurrence]) => (
-                               <Chip
-                                 key={skill}
-                                 label={`${skill} (${occurrence})`}
-                                 sx={{
-                                   backgroundColor: "#fff", // White background
-                                   color: "#000",
-                                   border: "1px solid rgb(28, 66, 109)", // Border color
-                                   "&:hover": {
-                                     backgroundColor: "#d7efff", // Hover color
-                                     cursor: "pointer",
-                                   },
-                                 }}
-                               />
-                             )
-                           )}
-                         </Box>
-                       </div>
-                     )
-                 )}
-
-               {/* Explanation of JD and Recommendation */}
-               <Box sx={{ display: "flex", gap: 2 }}>
-                 <Paper
-                   sx={{
-                     p: 2,
-                     flex: 1,
-                     border: "1px solid #ddd",
-                     borderRadius: 2,
-                     boxShadow: 2,
-                   }}
-                 >
-                   <Typography
-                     variant="h5"
-                     sx={{ mb: 2, fontWeight: "bold" }}
-                   >
-                     Explanation of JD
-                   </Typography>
-                   <Divider sx={{ height: 3, backgroundColor: "#0d619f" }} />
-                   <Typography
-                     variant="body2"
-                     sx={{
-                       marginTop: "10px",
-                       color: "text.secondary",
-                     }}
-                   >
-                     {/* Content for Explanation of JD */}
-                     We are looking for a passionate Software Engineer to
-                     design, develop, and install software solutions. The
-                     successful candidate will be able to build high-quality,
-                     innovative, and fully performing software in compliance
-                     with coding standards and technical design. Design,
-                     modify, develop, write, and implement software
-                     programming applications.
-                   </Typography>
-                 </Paper>
-
-                 <Paper
-                   sx={{
-                     p: 2,
-                     flex: 1,
-                     border: "1px solid #ddd",
-                     borderRadius: 2,
-                     boxShadow: 2,
-                   }}
-                 >
-                   <Typography
-                     variant="h5"
-                     sx={{ mb: 2, fontWeight: "bold" }}
-                   >
-                     Recommendation
-                   </Typography>
-                   <Divider sx={{ height: 3, backgroundColor: "#0d619f" }} />
-                   <Typography
-                     variant="body2"
-                     sx={{
-                       marginTop: "10px",
-                       color: "text.secondary",
-                     }}
-                   >
-                     {/* Content for Recommendation */}
-                     We are looking for a passionate Software Engineer to
-                     design, develop, and install software solutions. The
-                     successful candidate will be able to build high-quality,
-                     innovative, and fully performing software in compliance
-                     with coding standards and technical design. Design,
-                     modify, develop, write, and implement software
-                     programming applications.
-                   </Typography>
-                 </Paper>
-               </Box>
-             </Box>
-
-             {/* Profiles Card List */}
-           </Box>
-         </Box>
-          
+                <TablePagination
+                  rowsPerPageOptions={[5, 10, 25]}
+                  component="div"
+                  count={profiles.length}
+                  rowsPerPage={rowsPerPage}
+                  page={page}
+                  onPageChange={handleChangePage}
+                  onRowsPerPageChange={handleChangeRowsPerPage}
+                />
+              </Box>
+            </Box>
           ) : (
             <Box
               sx={{

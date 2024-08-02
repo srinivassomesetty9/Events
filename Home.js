@@ -45,6 +45,7 @@ import BreadCrumb from "./BreadCrumb";
 import Process from "./Process";
 import Reports from "./Reports";
 import { useGlobalState } from "./GlobalStateContext";
+import Myresumes from "./Myresumes";
 
 const opt_in_url_template = `https://api.jinnhire.in/jinnhire/data/requirements/{{requirement_id}}/opt/`;
 const opt_out_url_template = `https://api.jinnhire.in/jinnhire/data/requirements/{{requirement_id}}/opt-out/`;
@@ -71,7 +72,8 @@ function Home() {
   const [show, setShow] = useState(false);
   const [message, setMessage] = useState("");
   const [severity, setSeverity] = useState("success");
-  const [sortBy, setSortBy] = useState('default');
+  const [sortBy, setSortBy] = useState("default");
+  // const [optedInRequirements, setOptedInRequirements] = useState([]);
 
   useEffect(() => {
     const userData = localStorage.getItem("user");
@@ -241,51 +243,38 @@ function Home() {
     const isOptIn = event.target.checked;
     const token = localStorage.getItem("token");
 
-    try {
-      if (isOptIn) {
-        await axios.post(
-          opt_in_url_template.replace(
-            "{{requirement_id}}",
-            requirement.requirement_id
-          ),
-          {},
-          {
-            headers: { Authorization: `Token ${token}` },
-          }
-        );
-        setOptInCounts((prevCounts) => ({
-          ...prevCounts,
-          [requirement.requirement_id]:
-            (prevCounts[requirement.requirement_id] || 0) + 1,
-        }));
-      } else {
-        await axios.post(
-          opt_out_url_template.replace(
-            "{{requirement_id}}",
-            requirement.requirement_id
-          ),
-          {},
-          {
-            headers: { Authorization: `Token ${token}` },
-          }
-        );
-        setOptInCounts((prevCounts) => ({
-          ...prevCounts,
-          [requirement.requirement_id]:
-            (prevCounts[requirement.requirement_id] || 0) - 1,
-        }));
-      }
+    if (!token) {
+      // Handle case where token is not available
+      setShow(true);
+      setSeverity("error");
+      setMessage("User is not authenticated. Please log in.");
+      return;
+    }
 
-      setRequirements((prevRequirements) =>
-        prevRequirements.map((req) =>
-          req.requirement_id === requirement.requirement_id
-            ? { ...req, active: isOptIn }
-            : req
-        )
+    try {
+      const url = isOptIn
+        ? `https://api.jinnhire.in/jinnhire/data/requirements/${requirement.requirement_id}/opt/`
+        : `https://api.jinnhire.in/jinnhire/data/requirements/${requirement.requirement_id}/opt-out/`;
+
+      await axios.post(
+        url,
+        {},
+        {
+          headers: { Authorization: `Token ${token}` },
+        }
       );
+
+      setOptInCounts((prevCounts) => ({
+        ...prevCounts,
+        [requirement.requirement_id]: isOptIn
+          ? (prevCounts[requirement.requirement_id] || 0) + 1
+          : (prevCounts[requirement.requirement_id] || 0) - 1,
+      }));
+
+      // setOptedInRequirements(requirements);
       setShow(true);
       setSeverity("success");
-      setMessage(`${isOptIn ? "Opted-IN" : "Opted-Out"}  successfully!`);
+      setMessage(`${isOptIn ? "Opted-IN" : "Opted-Out"} successfully!`);
 
       // Update global state to trigger a refetch for all users
       setLastUpdateTime(Date.now());
@@ -297,6 +286,8 @@ function Home() {
         error.response?.data?.message ||
           `Error ${isOptIn ? "Opt-IN" : "Opt-Out"}. Please try again.`
       );
+    } finally {
+      setLoading(false); // End loading
     }
   };
 
@@ -342,7 +333,7 @@ function Home() {
     requirement.requirement_id.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  const optedInRequirements = requirements
+  const optedInRequirements = requirements;
 
   const sortedRequirements = filteredRequirements.slice().sort((a, b) => {
     switch (sortBy) {
@@ -440,7 +431,7 @@ function Home() {
             <Tab label="Source" />
             {loginRole !== "recruiter_sourcing" &&
             loginRole !== "lead_sourcing" &&
-            loginRole !== "account_manager"&&
+            loginRole !== "account_manager" &&
             loginRole !== "manager" ? (
               <Tab label="Process" />
             ) : (
@@ -450,8 +441,10 @@ function Home() {
             {loginRole === "manager" || loginRole === "account_manager" ? (
               <Tab label="Reports" />
             ) : (
-              ""
+              <Tab label="Reports" disabled/>
             )}
+            {(loginRole === "recruiter_processing" ||
+              loginRole === "lead_processing" || loginRole === "admin") && <Tab label="My Resumes" />}
           </Tabs>
           <TabPanel value={activeTab} index={0}>
             <Box
@@ -698,8 +691,6 @@ function Home() {
                                   color={
                                     requirement.active
                                       ? "success.main"
-                                      : requirement.users_opted.length >= 5
-                                      ? "text.disabled"
                                       : "error.main"
                                   }
                                   sx={{
@@ -710,31 +701,17 @@ function Home() {
                                 >
                                   {requirement.active ? "Opt-In" : "Opt-Out"}
                                 </Typography>
-                                <Tooltip
-                                  title={
-                                    !requirement.active
-                                      ? requirement.users_opted.length >= 5
-                                        ? "Opt-in limit reached"
-                                        : ""
-                                      : ""
-                                  }
-                                  arrow
-                                >
-                                  <span>
-                                    <Switch
-                                      checked={requirement.active || false}
-                                      onChange={(e) =>
-                                        handleToggle(requirement, e)
-                                      }
-                                      color="primary"
-                                      size="small"
-                                      disabled={
-                                        requirement.users_opted.length >= 5 &&
-                                        !requirement.active
-                                      }
-                                    />
-                                  </span>
-                                </Tooltip>
+
+                                <span>
+                                  <Switch
+                                    checked={requirement.active || false}
+                                    onChange={(e) =>
+                                      handleToggle(requirement, e)
+                                    }
+                                    color="primary"
+                                    size="small"
+                                  />
+                                </span>
                               </Box>
                             )}
                             {(loginRole === "recruiter_sourcing" ||
@@ -800,7 +777,7 @@ function Home() {
             ) : (
               <TableContainer component={Paper}>
                 <Table>
-                  <TableHead sx={{color:"white"}}>
+                  <TableHead sx={{ color: "white" }}>
                     <TableRow>
                       <TableCell>SNO</TableCell>
                       <TableCell>Requirement ID</TableCell>
@@ -907,30 +884,15 @@ function Home() {
                           {(loginRole === "recruiter_processing" ||
                             loginRole === "lead_processing") && (
                             <TableCell>
-                              <Tooltip
-                                title={
-                                  !requirement.active
-                                    ? requirement.users_opted.length >= 5
-                                      ? "Opt-in limit reached"
-                                      : ""
-                                    : ""
-                                }
-                                placement="top"
-                                arrow
-                              >
-                                <span>
-                                  <Switch
-                                    checked={requirement.active}
-                                    onChange={(event) =>
-                                      handleToggle(requirement, event)
-                                    }
-                                    disabled={
-                                      requirement.users_opted.length >= 5 &&
-                                      !requirement.active
-                                    } // Disable switch if limit reached and it's not active
-                                  />
-                                </span>
-                              </Tooltip>
+                              <span>
+                                <Switch
+                                  checked={requirement.active}
+                                  onChange={(event) =>
+                                    handleToggle(requirement, event)
+                                  }
+                                />
+                              </span>
+
                               {isRequirementDeactivated(requirement) && (
                                 <Alert severity="warning" sx={{ mt: 2 }}>
                                   Deactivated
@@ -987,10 +949,24 @@ function Home() {
             )}
           </TabPanel>
           <TabPanel value={activeTab} index={1}>
-            <Process optedInRequirements={optedInRequirements} />
+            <Process
+              show={show}
+              setShow={setShow}
+              severity={severity}
+              message={message}
+              optedInRequirements={optedInRequirements}
+              optInCounts={optInCounts} // Pass optInCounts if needed in MyComponent
+              handleToggle={handleToggle} // Pass handleToggle to MyComponent
+              handleTabChange={handleTabChange}
+              loading={loading}
+              rowsPerPage={rowsPerPage}
+            />
           </TabPanel>
           <TabPanel value={activeTab} index={3}>
             <Reports />
+          </TabPanel>
+          <TabPanel value={activeTab} index={4}>
+            <Myresumes userID={userId} />
           </TabPanel>
         </Container>
       </Box>

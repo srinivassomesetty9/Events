@@ -1,10 +1,12 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import Box from "@mui/material/Box";
 import { Typography, TextField, Button, Alert, Snackbar, Select, MenuItem, FormControl, InputLabel } from "@mui/material";
+import { AppContext } from "./AppContext";
 
 const GlobalSettings = () => {
   const [globalSurplusCount, setGlobalSurplusCount] = useState(2);
-  const [assignmentStrategy, setAssignmentStrategy] = useState("ROUNDROBIN_OPTED_USERS");
+  const [globalAssignmentType, setGlobalAssignmentType] = useState("");
+  const { resumeAssignmentStrategy, setResumeAssignmentStrategy } = useContext(AppContext);
   const [show, setShow] = useState(false);
   const [message, setMessage] = useState("");
   const [severity, setSeverity] = useState("success");
@@ -28,7 +30,8 @@ const GlobalSettings = () => {
         if (response.ok) {
           const data = await response.json();
           setGlobalSurplusCount(data.global_surplus_count_of_resumes);
-          setAssignmentStrategy(data.resume_assignment_strategy);
+          setGlobalAssignmentType(data.global_assignment_type);
+          setResumeAssignmentStrategy(data.resume_assignment_strategy);
         } else {
           throw new Error("Failed to fetch global settings");
         }
@@ -38,7 +41,7 @@ const GlobalSettings = () => {
     };
 
     getGlobalSettings();
-  }, []);
+  }, [setResumeAssignmentStrategy]);
 
   const handleSurplusCountChange = (event) => {
     setGlobalSurplusCount(event.target.value);
@@ -58,8 +61,8 @@ const GlobalSettings = () => {
           },
           body: JSON.stringify({
             global_surplus_count_of_resumes: globalSurplusCount,
-            global_assignment_type: assignmentStrategy,  // Using the combined select value
-            resume_assignment_strategy: assignmentStrategy,  // Using the combined select value
+            global_assignment_type: globalAssignmentType,
+            resume_assignment_strategy: resumeAssignmentStrategy,
           }),
         }
       );
@@ -76,10 +79,14 @@ const GlobalSettings = () => {
       console.error("Error:", error);
       setShow(true);
       setSeverity("error");
-      setMessage("Error updating global settings. Please try again.");
+      if (error.response.data.message) {
+        setMessage(error.response.data.message);
+      } else {
+        setMessage("Error updating global settings. Please try again.");
+      }
     }
   };
-
+console.log(resumeAssignmentStrategy,"ASSIGNMENt")
   return (
     <Box>
       <Snackbar
@@ -110,23 +117,32 @@ const GlobalSettings = () => {
           variant="outlined"
           sx={{ mr: 2 }}
         />
-        <Typography variant="body1" gutterBottom>
-          Assignment Strategy
-        </Typography>
-        <FormControl variant="outlined" sx={{ mr: 2, minWidth: 200 }}>
+        <Box>
+          <Typography id="global-assignment-type-label">Assignment Type</Typography>
           <Select
-            labelId="assignment-strategy-label"
-            id="assignmentStrategy"
-            value={assignmentStrategy}
-            onChange={(e) => setAssignmentStrategy(e.target.value)}
-            // label="Assignment Strategy"
+            labelId="global-assignment-type-label"
+            id="globalAssignmentType"
+            value={globalAssignmentType}
+            onChange={(e) => setGlobalAssignmentType(e.target.value)}
           >
             <MenuItem value="roundrobin_global_active_byload">Round Robin Global Active by Load</MenuItem>
-            <MenuItem value="ROUNDROBIN_OPTED_USERS">Round Robin Opted Users</MenuItem>
+            {/* <MenuItem value="another_type">Another Type</MenuItem> */}
           </Select>
-        </FormControl>
-      </Box>
-      <Button
+        </Box>
+        <Box>
+          <Typography id="resume-assignment-strategy-label">Assignment Strategy</Typography>
+          <Select
+            labelId="resume-assignment-strategy-label"
+            id="resumeAssignmentStrategy"
+            value={resumeAssignmentStrategy}
+            onChange={(e) => setResumeAssignmentStrategy(e.target.value)}
+          >
+            <MenuItem value="roundrobin_opted_users">Round Robin Opted Users</MenuItem>
+            <MenuItem value="pool_based">Pool Based</MenuItem>
+            {/* Add more options as needed */}
+          </Select>
+        </Box>
+        <Button
           id="updateSurplusCountButton"
           variant="contained"
           color="primary"
@@ -135,6 +151,7 @@ const GlobalSettings = () => {
         >
           Update Global Settings
         </Button>
+      </Box>
     </Box>
   );
 };

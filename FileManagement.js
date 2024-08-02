@@ -198,6 +198,7 @@ export default function FileManagement() {
     const formData = new FormData();
     formData.append("file", file);
     formData.append("requirement_id", requirement_id);
+    formData.append("sourcing_user_id", parsedUserData.id);
 
     try {
       const token = localStorage.getItem("token");
